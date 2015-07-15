@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>RescueTime, again</title>
+    <script src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
+</head>
+
+<body>
+    <h1>Merge</h1>
+    <h2>Which type of file do you want to merge?</h2>
+    <input type="radio" name="type" value="hour" id="hour">Hour (efficienza)
+    <br>
+    <input type="radio" name="type" value="activity" id="activity">Activity
+    <h3>Carica i files</h3>
+    <input id="file" type="file" />
+    <button onClick="merge()">MERGE!</button>
+    <ul id="fileList">
+
+    </ul>
+    <script>
+        var files = [];
+        (function () {
+
+            function onChange(event) {
+                var reader = new FileReader();
+                reader.onload = onReaderLoad;
+                reader.readAsText(event.target.files[0]);
+                $("#fileList").append("<li>" + document.getElementById('file').value + "</li>");
+
+            }
+
+            function onReaderLoad(event) {
+                console.log(event.target.result);
+                var obj = JSON.parse(event.target.result);
+                files.push(obj);
+
+            }
+
+
+
+            document.getElementById('file').addEventListener('change', onChange);
+
+        }());
+
+        function merge() {
+            if (document.getElementById('hour').checked) {
+                console.log("hour");
+            } else if (document.getElementById('activity').checked) {
+                                console.log("act");
+
+            }
+        }
+    </script>
+</body>
+
+</html>
