@@ -1,78 +1,97 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <title>All in one</title>
-        <script src="https://code.jquery.com/jquery-1.11.2.min.js"></script>
-        <!-- Latest compiled and minified CSS -->
-        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
-        <!-- Latest compiled and minified JavaScript -->
-        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
-        <script src="http://eternicode.github.io/bootstrap-datepicker/bootstrap-datepicker/js/bootstrap-datepicker.js"></script>
-        <link rel="stylesheet" href="http://eternicode.github.io/bootstrap-datepicker/bootstrap-datepicker/css/datepicker3.css">
-        <link rel="stylesheet" href="loader.css">
-        <script type="text/javascript" src="https://www.google.com/jsapi"></script>
-    </head>
-    <body>
-        <div class="container-fluid">
-            <div class="row-centered">
-                <div class="col-sm-6 col-centered">
-                    <div class="page-header">
-                        <h1>More <a href="https://www.rescuetime.com/">RescueTime</a> Charts <small>Cuz we're poor!</small></h1>
-                    </div>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-sm-6">
-                    <div class="form-group">
-                        <label for="exampleInputEmail1"><a href="https://www.rescuetime.com/anapi/manage">API Key</a></label>
-                        <input type="text" class="form-control" id="api_key" placeholder="Enter API key" value="B63eVVR2RIGTJ4dzFQtUbvVXBLY71hPip0wuQIDh">
-                        <div class="input-daterange input-group" id="datepicker">
-                            <span class="input-group-addon" >from</span>
-                            <input type="text" class="input-sm form-control" name="start" id="from" value="2015-03-04"/>
-                            <span class="input-group-addon" >to</span>
-                            <input type="text" class="input-sm form-control" name="end" id="to" value="2015-03-31"/>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-sm-6"><br>NOTE: It may take some second to retrive and elaborate the data <br>
-                <button type="button" class="btn btn-primary" onClick="init()">Elaborate</button> 	</div>
-            </div>
-            <div class="row">
-                <div class="spinner"></div>
-            </div>
-            <div class="row">
-                <div class="col-sm-12" >
-                    <h2>WUT is dis?</h2>
-                    <div id="efficiency_graph"></div>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-sm-12" >
-                    <h2>WUT is dis?</h2>
-                    <div id="avg_hour_graph"></div>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-sm-12">
-                    <h2>WUT is dis?</h2>
-                    <div id="hour_graph" ></div>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-sm-12" >
-                    <h2 id="act-display">WUT is dis?</h2>
-                    
-                    <div id="chartRangeFilter_dashboard_div">
-                        <div id="numberRangeFilter_control_div"></div>
-                        
-                        <div id="numberRangeFilter_chart_div" ></div>
-                    </div>
+
+<head>
+    <meta charset="UTF-8">
+    <title>All in one</title>
+    <script src="https://code.jquery.com/jquery-1.11.2.min.js"></script>
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
+    <!-- Latest compiled and minified JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+    <script src="http://eternicode.github.io/bootstrap-datepicker/bootstrap-datepicker/js/bootstrap-datepicker.js"></script>
+    <link rel="stylesheet" href="http://eternicode.github.io/bootstrap-datepicker/bootstrap-datepicker/css/datepicker3.css">
+    <link rel="stylesheet" href="loader.css">
+    <script type="text/javascript" src="https://www.google.com/jsapi"></script>
+</head>
+
+<body>
+    <div class="container-fluid">
+        <div class="row-centered">
+            <div class="col-sm-6 col-centered">
+                <div class="page-header">
+                    <h1>More <a href="https://www.rescuetime.com/">RescueTime</a> Charts <small>Cuz we're poor!</small></h1>
                 </div>
             </div>
         </div>
+        <div class="row" id="controls">
+            <div class="col-sm-6">
+                <div class="form-group">
+                    <label for="exampleInputEmail1"><a href="https://www.rescuetime.com/anapi/manage">API Key</a>
+                    </label>
+                    <input type="text" class="form-control" id="api_key" placeholder="Enter API key" >
+                    <div class="input-daterange input-group" id="datepicker">
+                        <span class="input-group-addon">from</span>
+                        <input type="text" class="input-sm form-control" name="start" id="from"  />
+                        <span class="input-group-addon">to</span>
+                        <input type="text" class="input-sm form-control" name="end" id="to"  />
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-4">
+                <br>NOTE: It may take some second to retrive and elaborate the data
+                <br>
+                <button type="button" class="btn btn-primary" onClick="init()">Elaborate</button>
+                <div class="checkbox">
+                    <label>
+                        <input type="checkbox" id="download"> Download JSON file for the selected range
+                    </label>
+                </div>
+            </div>
+            <div class="col-sm-2" id="downloadSection">
+                
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="spinner"></div>
+    </div>
+    <div class="row">
+        <div class="col-sm-12">
+            <h2>WUT is dis?</h2>
+            <div id="efficiency_graph"></div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-12">
+            <h2>WUT is dis?</h2>
+            <div id="avg_hour_graph"></div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-12">
+            <h2>WUT is dis?</h2>
+            <div id="hour_graph"></div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-12">
+            <h2 id="act-display">WUT is dis?</h2>
 
-        <script src="app.js"></script>
-        <script>init()</script>
-    </body>
+            <div id="chartRangeFilter_dashboard_div">
+                <div id="numberRangeFilter_control_div"></div>
+
+                <div id="numberRangeFilter_chart_div"></div>
+            </div>
+        </div>
+    </div>
+    </div>
+
+    <script src="app.js"></script>
+    <script>
+        datePickerOptions();
+        //init()
+    </script>
+</body>
+
 </html>

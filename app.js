@@ -14,7 +14,9 @@ google.load('visualization', '1.0', {
 $(".spinner").hide();
 
 function init() {
-    datePickerOptions();
+    $("#downloadSection").empty();
+    $("#act-display").empty();
+    $(".spinner").show();
     key = document.getElementById('api_key').value;
     rb = document.getElementById('from').value;
     re = document.getElementById('to').value;
@@ -24,8 +26,11 @@ function init() {
     getActivityData();
 }
 
+
+
+
 function datePickerOptions() {
-    $(".spinner").show();
+
     $('#datepicker').datepicker({
         format: "yyyy-mm-dd",
         clearBtn: true,
@@ -54,6 +59,10 @@ function getEfficiencyData() {
         } else {
             calcEfficiency(data);
             calcHours(data);
+            if (document.getElementById('download').checked) {
+
+                downloadEfficiencyData(data);
+            }
         }
     }).fail(function () {
         failCount++;
@@ -70,6 +79,9 @@ function getActivityData() {
             console.log("undefined: maybe invalid parameters!?");
         } else {
             calcActivity(data);
+            if (document.getElementById('download').checked) {
+                downloadActivityData(data);
+            }
         }
     }).fail(function () {
         failCount++;
@@ -78,6 +90,20 @@ function getActivityData() {
             init();
         } else console.log("Failed 3 times attempting to: getJSON!");
     });
+}
+
+function downloadEfficiencyData(data) {
+    var JSONString = JSON.stringify(data);
+    var file = "text/json;charset=utf-8," + encodeURIComponent(JSONString);
+    
+    $('<a href="data:' + file + '" download="EfficiencyData.json" id="downEfficency">downloadEfficiencyData</a> <br>').appendTo('#downloadSection');
+    //$('#downEfficency').get(0).click();
+}
+function downloadActivityData(data) {
+    var JSONString = JSON.stringify(data);
+    var file = "text/json;charset=utf-8," + encodeURIComponent(JSONString);
+    $('<a href="data:' + file + '" download="ActivityData.json" id="downEfficency">downloadActivityDataa</a> <br>').appendTo('#downloadSection');
+    //$('#downEfficency').get(0).click();
 }
 
 function calcEfficiency(file) {
