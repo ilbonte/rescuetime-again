@@ -38,6 +38,49 @@ function datePickerOptions() {
     });
 }
 
+
+var efficencyUploaded;
+var activityUploaded;
+(function () {
+    function onChangeEfficency(event) {
+        var reader = new FileReader();
+        reader.onload = onReaderLoadEfficency;
+        reader.readAsText(event.target.files[0]);
+
+    }
+
+    function onReaderLoadEfficency(event) {
+        efficencyUploaded = JSON.parse(event.target.result);
+        console.log(efficencyUploaded);
+    }
+
+    function onChangeActivity(event) {
+        var reader = new FileReader();
+        reader.onload = onReaderLoadActivity;
+        reader.readAsText(event.target.files[0]);
+
+    }
+
+    function onReaderLoadActivity(event) {
+        activityUploaded = JSON.parse(event.target.result);
+        console.log(activityUploaded);
+    }
+    document.getElementById('fileEfficency').addEventListener('change', onChangeEfficency);
+    document.getElementById('fileActivity').addEventListener('change', onChangeActivity);
+}());
+
+function checkFiles() {
+    $("#act-display").empty();
+    if (efficencyUploaded != null) {
+        calcEfficiency(efficencyUploaded);
+        calcHours(efficencyUploaded);
+    }
+    if (activityUploaded != null) {
+
+        calcActivity(activityUploaded);
+    }
+}
+
 function urlForEfficiency() {
     pv = "interval"; // #do not change this
     rk = "efficiency";
@@ -95,10 +138,11 @@ function getActivityData() {
 function downloadEfficiencyData(data) {
     var JSONString = JSON.stringify(data);
     var file = "text/json;charset=utf-8," + encodeURIComponent(JSONString);
-    
+
     $('<a href="data:' + file + '" download="EfficiencyData.json" id="downEfficency">downloadEfficiencyData</a> <br>').appendTo('#downloadSection');
     //$('#downEfficency').get(0).click();
 }
+
 function downloadActivityData(data) {
     var JSONString = JSON.stringify(data);
     var file = "text/json;charset=utf-8," + encodeURIComponent(JSONString);

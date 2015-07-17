@@ -27,14 +27,15 @@
         <div class="row" id="controls">
             <div class="col-sm-6">
                 <div class="form-group">
-                    <label for="exampleInputEmail1"><a href="https://www.rescuetime.com/anapi/manage">API Key</a>
+                    <h2>Get the data</h2>
+                    <label><a href="https://www.rescuetime.com/anapi/manage">API Key</a>
                     </label>
-                    <input type="text" class="form-control" id="api_key" placeholder="Enter API key" >
+                    <input type="text" class="form-control" id="api_key" placeholder="Enter API key">
                     <div class="input-daterange input-group" id="datepicker">
                         <span class="input-group-addon">from</span>
-                        <input type="text" class="input-sm form-control" name="start" id="from"  />
+                        <input type="text" class="input-sm form-control" name="start" id="from" />
                         <span class="input-group-addon">to</span>
-                        <input type="text" class="input-sm form-control" name="end" id="to"  />
+                        <input type="text" class="input-sm form-control" name="end" id="to" />
                     </div>
                 </div>
             </div>
@@ -49,42 +50,60 @@
                 </div>
             </div>
             <div class="col-sm-2" id="downloadSection">
-                
+
             </div>
         </div>
-    </div>
-    <div class="row">
-        <div class="spinner"></div>
-    </div>
-    <div class="row">
-        <div class="col-sm-12">
-            <h2>WUT is dis?</h2>
-            <div id="efficiency_graph"></div>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-sm-12">
-            <h2>WUT is dis?</h2>
-            <div id="avg_hour_graph"></div>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-sm-12">
-            <h2>WUT is dis?</h2>
-            <div id="hour_graph"></div>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-sm-12">
-            <h2 id="act-display">WUT is dis?</h2>
+        <div class="row">
+            <h2> ... OR upload your files</h2>
+            <div class="col-sm-3">
+                <h3>Activity</h3>
+                <input id="fileActivity" type="file" />
 
-            <div id="chartRangeFilter_dashboard_div">
-                <div id="numberRangeFilter_control_div"></div>
+            </div>
+            <div class="col-sm-3">
+                <h3>Efficency</h3>
+                <input id="fileEfficency" type="file" />
 
-                <div id="numberRangeFilter_chart_div"></div>
+            </div>
+            <div class="col-sm-4">
+                <br>
+                <button type="button" class="btn btn-primary" onClick="checkFiles()">Elaborate</button>
+            </div>
+
+        </div>
+
+        <div class="row">
+            <div class="spinner"></div>
+        </div>
+        <div class="row">
+            <div class="col-sm-12">
+                <h2>WUT is dis?</h2>
+                <div id="efficiency_graph"></div>
             </div>
         </div>
-    </div>
+        <div class="row">
+            <div class="col-sm-12">
+                <h2>WUT is dis?</h2>
+                <div id="avg_hour_graph"></div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-12">
+                <h2>WUT is dis?</h2>
+                <div id="hour_graph"></div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-12">
+                <h2 id="act-display">WUT is dis?</h2>
+
+                <div id="chartRangeFilter_dashboard_div">
+                    <div id="numberRangeFilter_control_div"></div>
+
+                    <div id="numberRangeFilter_chart_div"></div>
+                </div>
+            </div>
+        </div>
     </div>
 
     <script src="app.js"></script>

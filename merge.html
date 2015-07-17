@@ -79,20 +79,21 @@
             var data = "text/json;charset=utf-8," + encodeURIComponent(JSONString);
             $('<a href="data:' + data + '" download="data.json">download JSON</a>').appendTo('#fileList');
 
-            function merge(full, mese) {
-                for (var i = 0; i < full.rows.length; i++) {
-                    for (var j = 0; j < mese.rows.length; j++) {
-                        // console.log(gennaio.rows[i][3] + " vs " + febbraio.rows[j][3]);
-                        if (full.rows[i][3] === mese.rows[j][3]) {
-                            full.rows[i][1] += mese.rows[j][1];
-                            mese.rows.splice(j, 1);
-                        }
+
+        }
+
+        function merge(full, mese) {
+            for (var i = 0; i < full.rows.length; i++) {
+                for (var j = 0; j < mese.rows.length; j++) {
+                    if (full.rows[i][3] === mese.rows[j][3]) {
+                        full.rows[i][1] += mese.rows[j][1];
+                        mese.rows.splice(j, 1);
                     }
                 }
-
-                full.rows = full.rows.concat(mese.rows);
-                return tot;
             }
+
+            full.rows = full.rows.concat(mese.rows);
+            return full;
         }
     </script>
 </body>
