@@ -7,6 +7,7 @@ The main things to do are:
 * write some documentation/tutorial
 * insert control if the uploaded JSON in valid
 * improve code readability
+* add efficency measurement for day of the week to discover which day is the more productive 
 
 This is a personal project which I started mainly with the intention of practicing JS and working with API.
 
