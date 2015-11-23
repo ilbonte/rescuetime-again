@@ -84,16 +84,17 @@ function checkFiles() {
 function urlForEfficiency() {
     pv = "interval"; // #do not change this
     rk = "efficiency";
-    efficiencyUrl = "https://www.rescuetime.com/anapi/data?key=" + key + "&perspective=" + pv + "&restrict_kind=" + rk + "&interval=" + rs + "&restrict_begin=" + rb + "&restrict_end=" + re + "&format=json";
+    efficiencyUrl = "https://www.rescuetime.com/anapi/data?key=" + key + "&perspective=" + pv + "&restrict_kind=" + rk + "&interval=" + rs + "&restrict_begin=" + rb + "&restrict_end=" + re + "&format=json&callback=?";
     console.log(efficiencyUrl);
 }
-
+ 
 function urlForActivity() {
     pv = "rank"; // #do not change this
     rk = "activity";
     activityUrl = "http://www.rescuetime.com/anapi/data?key=" + key + "&perspective=" + pv + "&restrict_kind=" + rk + "&interval=" + rs + "&restrict_begin=" + rb + "&restrict_end=" + re + "&format=json";
     console.log(activityUrl);
 }
+
 
 function getEfficiencyData() {
     $.getJSON( efficiencyUrl, function (data) {
