@@ -87,7 +87,7 @@ function urlForEfficiency() {
     efficiencyUrl = "https://www.rescuetime.com/anapi/data?key=" + key + "&perspective=" + pv + "&restrict_kind=" + rk + "&interval=" + rs + "&restrict_begin=" + rb + "&restrict_end=" + re + "&format=json&callback=?";
     console.log(efficiencyUrl);
 }
- 
+
 function urlForActivity() {
     pv = "rank"; // #do not change this
     rk = "activity";
