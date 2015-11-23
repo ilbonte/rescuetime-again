@@ -27,8 +27,6 @@ function init() {
 }
 
 
-
-
 function datePickerOptions() {
 
     $('#datepicker').datepicker({
@@ -65,6 +63,7 @@ var activityUploaded;
         activityUploaded = JSON.parse(event.target.result);
         console.log(activityUploaded);
     }
+
     document.getElementById('fileEfficency').addEventListener('change', onChangeEfficency);
     document.getElementById('fileActivity').addEventListener('change', onChangeActivity);
 }());
@@ -84,7 +83,7 @@ function checkFiles() {
 function urlForEfficiency() {
     pv = "interval"; // #do not change this
     rk = "efficiency";
-    efficiencyUrl = "https://www.rescuetime.com/anapi/data?key=" + key + "&perspective=" + pv + "&restrict_kind=" + rk + "&interval=" + rs + "&restrict_begin=" + rb + "&restrict_end=" + re + "&format=json&callback=?";
+    efficiencyUrl = "http://www.rescuetime.com/anapi/data?key=" + key + "&perspective=" + pv + "&restrict_kind=" + rk + "&interval=" + rs + "&restrict_begin=" + rb + "&restrict_end=" + re + "&format=json";
     console.log(efficiencyUrl);
 }
 
@@ -97,7 +96,7 @@ function urlForActivity() {
 
 
 function getEfficiencyData() {
-    $.getJSON( efficiencyUrl, function (data) {
+    $.getJSON('http://allow-any-origin.appspot.com/' + efficiencyUrl, function (data) {
         if (typeof data.rows === 'undefined') {
             console.log("undefined: maybe invalid parameters!?");
         } else {
@@ -206,79 +205,79 @@ function calcEfficiency(file) {
 }
 
 function calcHours(file) {
-        var combinedPoints = new Array();
-        var groupBy = new Array();
-        var combinedAvg = new Array();
-        var plotAvg = new Array();
-        combinedPoints[0] = ['Hour', 'Productivity'];
-        for (var i = 0; i < file.rows.length; i++) {
-            combinedPoints[i + 1] = [parseInt(file.rows[i][0].substr(11, 2)), file.rows[i][4]];
-        }
-        for (var i = 0; i < 24; i++) {
-            groupBy[i] = filter(combinedPoints, i);
-        }
-        for (var i = 0; i < 24; i++) {
-            combinedAvg[i] = [i, findAvg(groupBy[i])];
-        }
-        //second parameter is false because first row is headers, not data.
-        var data = google.visualization.arrayToDataTable(combinedPoints, false);
-        var avgData = google.visualization.arrayToDataTable(combinedAvg, true);
-        var options = {
-            title: 'Productivity for hour',
-            'height': 600,
-            hAxis: {
-                title: 'Hour',
-                gridlines: {
-                    count: 24
-                }
-            },
-            vAxis: {
-                title: 'Productivity',
-                minValue: 0
-            },
-            legend: {
-                position: 'bottom'
-            }
-        };
-        var avgOptions = {
-            title: 'Your average pro through the day',
-            'height': 600,
-            curveType: 'function',
-            hAxis: {
-                title: 'Hour',
-                gridlines: {
-                    count: 24
-                }
-            },
-            vAxis: {
-                title: 'Productivity',
-                minValue: 0
-            },
-            animation: {
-                duration: 500,
-                startup: true,
-                easing: 'in'
-            },
-            legend: {
-                position: 'none'
-            },
-            crosshair: {
-                trigger: 'selection'
-            }
-        };
-        var avgChart = new google.visualization.LineChart(document.getElementById('avg_hour_graph'));
-        var chart = new google.visualization.ScatterChart(document.getElementById('hour_graph'));
-        $(".spinner").hide();
-        avgChart.draw(avgData, avgOptions);
-        chart.draw(data, options);
+    var combinedPoints = new Array();
+    var groupBy = new Array();
+    var combinedAvg = new Array();
+    var plotAvg = new Array();
+    combinedPoints[0] = ['Hour', 'Productivity'];
+    for (var i = 0; i < file.rows.length; i++) {
+        combinedPoints[i + 1] = [parseInt(file.rows[i][0].substr(11, 2)), file.rows[i][4]];
     }
-    //This function groups the data for every hour in an array
+    for (var i = 0; i < 24; i++) {
+        groupBy[i] = filter(combinedPoints, i);
+    }
+    for (var i = 0; i < 24; i++) {
+        combinedAvg[i] = [i, findAvg(groupBy[i])];
+    }
+    //second parameter is false because first row is headers, not data.
+    var data = google.visualization.arrayToDataTable(combinedPoints, false);
+    var avgData = google.visualization.arrayToDataTable(combinedAvg, true);
+    var options = {
+        title: 'Productivity for hour',
+        'height': 600,
+        hAxis: {
+            title: 'Hour',
+            gridlines: {
+                count: 24
+            }
+        },
+        vAxis: {
+            title: 'Productivity',
+            minValue: 0
+        },
+        legend: {
+            position: 'bottom'
+        }
+    };
+    var avgOptions = {
+        title: 'Your average pro through the day',
+        'height': 600,
+        curveType: 'function',
+        hAxis: {
+            title: 'Hour',
+            gridlines: {
+                count: 24
+            }
+        },
+        vAxis: {
+            title: 'Productivity',
+            minValue: 0
+        },
+        animation: {
+            duration: 500,
+            startup: true,
+            easing: 'in'
+        },
+        legend: {
+            position: 'none'
+        },
+        crosshair: {
+            trigger: 'selection'
+        }
+    };
+    var avgChart = new google.visualization.LineChart(document.getElementById('avg_hour_graph'));
+    var chart = new google.visualization.ScatterChart(document.getElementById('hour_graph'));
+    $(".spinner").hide();
+    avgChart.draw(avgData, avgOptions);
+    chart.draw(data, options);
+}
+//This function groups the data for every hour in an array
 function filter(arr, cond) {
-        return arr.filter(function (element) {
-            return element[0] === cond;
-        });
-    }
-    //This function finds the average productivity for an hour. (Is executed 24 times)
+    return arr.filter(function (element) {
+        return element[0] === cond;
+    });
+}
+//This function finds the average productivity for an hour. (Is executed 24 times)
 function findAvg(arr) {
     var length = arr.length;
     var avg;
@@ -295,24 +294,24 @@ function calcActivity(file) {
     var color;
     Combined[0] = ['Results', 'Select the range', {
         role: 'style'
-    }, ];
+    },];
     for (var i = 0; i < 50; i++) {
         switch (file.rows[i][5]) {
-        case -2:
-            color = "#C5392F";
-            break;
-        case -1:
-            color = "#92343B";
-            break;
-        case 0:
-            color = "#655568";
-            break;
-        case 1:
-            color = "#395B96";
-            break;
-        case 2:
-            color = "#2F78BD;";
-            break;
+            case -2:
+                color = "#C5392F";
+                break;
+            case -1:
+                color = "#92343B";
+                break;
+            case 0:
+                color = "#655568";
+                break;
+            case 1:
+                color = "#395B96";
+                break;
+            case 2:
+                color = "#2F78BD;";
+                break;
         }
         var tmp = file.rows[i][1];
         var mins = tmp / 60;
@@ -376,27 +375,20 @@ function groupByCategory(file) {
 }
 
 function printInfo(distracting, neutral, productive) {
-    console.log(distracting.toString().toHHMMSS());
-    console.log(neutral.toString().toHHMMSS());
-    console.log(productive.toString().toHHMMSS());
-    $('#act-display').append("<h3> Total productive time: " + productive.toString().toHHMMSS() + " <div style=' width: 18px; height: 18px;background: #2F78BD;display: inline-block;'></div> + <div style='width: 18px; height: 18px; background: #395B96; display: inline-block;'></div> </h3> ");
-    $('#act-display').append("<h3> Total neutral time: " + neutral.toString().toHHMMSS() + "<div style='width: 18px; height: 18px; background: #655568; display: inline-block;'></div> </h3> ");
-    $('#act-display').append("<h3> Total distracting time: " + distracting.toString().toHHMMSS() + "<div style=' width: 18px; height: 18px;background: #C5392F;display: inline-block;'></div> + <div style='width: 18px; height: 18px; background: #92343B; display: inline-block;'></div></h3>");
+    $('#act-display').append("<h3> Total productive time: " + productive.toHHMMSS() + " <div style=' width: 18px; height: 18px;background: #2F78BD;display: inline-block;'></div> + <div style='width: 18px; height: 18px; background: #395B96; display: inline-block;'></div> </h3> ");
+    $('#act-display').append("<h3> Total neutral time: " + neutral.toHHMMSS() + "<div style='width: 18px; height: 18px; background: #655568; display: inline-block;'></div> </h3> ");
+    $('#act-display').append("<h3> Total distracting time: " + distracting.toHHMMSS() + "<div style=' width: 18px; height: 18px;background: #C5392F;display: inline-block;'></div> + <div style='width: 18px; height: 18px; background: #92343B; display: inline-block;'></div></h3>");
 }
-String.prototype.toHHMMSS = function () {
-    var sec_num = parseInt(this, 10);
-    var hours = Math.floor(sec_num / 3600);
-    var minutes = Math.floor((sec_num - (hours * 3600)) / 60);
-    var seconds = sec_num - (hours * 3600) - (minutes * 60);
-    if (hours < 10) {
-        hours = "0" + hours;
-    }
-    if (minutes < 10) {
-        minutes = "0" + minutes;
-    }
-    if (seconds < 10) {
-        seconds = "0" + seconds;
-    }
-    var time = hours + ':' + minutes + ':' + seconds;
-    return time;
+Number.prototype.toHHMMSS = function () {
+    var numdays = Math.floor(this / 86400);
+
+    var numhours = Math.floor((this % 86400) / 3600);
+
+    var numminutes = Math.floor(((this % 86400) % 3600) / 60);
+
+    var numseconds = ((this % 86400) % 3600) % 60;
+
+    var string= numdays + " days " + numhours + " hours " + numminutes + " minutes " + numseconds + " seconds";
+    return string;
+
 }
