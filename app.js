@@ -117,7 +117,7 @@ function getEfficiencyData() {
 }
 
 function getActivityData() {
-    $.getJSON('http://allow-any-origin.appspot.com/' + activityUrl, function (data) {
+    $.getJSON( activityUrl, function (data) {
         if (typeof data.rows === 'undefined') {
             console.log("undefined: maybe invalid parameters!?");
         } else {
