@@ -84,7 +84,7 @@ function checkFiles() {
 function urlForEfficiency() {
     pv = "interval"; // #do not change this
     rk = "efficiency";
-    efficiencyUrl = "http://www.rescuetime.com/anapi/data?key=" + key + "&perspective=" + pv + "&restrict_kind=" + rk + "&interval=" + rs + "&restrict_begin=" + rb + "&restrict_end=" + re + "&format=json";
+    efficiencyUrl = "https://www.rescuetime.com/anapi/data?key=" + key + "&perspective=" + pv + "&restrict_kind=" + rk + "&interval=" + rs + "&restrict_begin=" + rb + "&restrict_end=" + re + "&format=json";
     console.log(efficiencyUrl);
 }
 
@@ -96,7 +96,7 @@ function urlForActivity() {
 }
 
 function getEfficiencyData() {
-    $.getJSON('http://allow-any-origin.appspot.com/' + efficiencyUrl, function (data) {
+    $.getJSON( efficiencyUrl, function (data) {
         if (typeof data.rows === 'undefined') {
             console.log("undefined: maybe invalid parameters!?");
         } else {
@@ -117,7 +117,7 @@ function getEfficiencyData() {
 }
 
 function getActivityData() {
-    $.getJSON( activityUrl, function (data) {
+    $.getJSON('http://allow-any-origin.appspot.com/' + activityUrl, function (data) {
         if (typeof data.rows === 'undefined') {
             console.log("undefined: maybe invalid parameters!?");
         } else {
