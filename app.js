@@ -1,3 +1,28 @@
+/*https://developers.google.com/chart/interactive/docs/library_loading_enhancements#frozen-versions
+ * init()
+ *   urlForEfficiency() //create url based on parameters
+ *   getEfficiencyData()//get json obj
+ *       calcEfficiency()
+ *       calcHours()
+ *          filter()
+ *          findAvg()
+ *       downloadEfficiencyData()
+ *
+ *
+ *   urlForActivity()
+ *   getActivityData()
+ *      calcActivity()
+ *          groupByCategory()
+ *              printInfo()
+ *                  .toHHMMSS
+ *
+ *      downloadActivityData()
+ * updateProdTrend()
+ * datePickerOptions()
+ * */
+
+
+var degreeTrend = 10;
 var key = "",
     rb = "",
     re = "",
@@ -8,12 +33,14 @@ var key = "",
 var activityUrl = "",
     efficiencyUrl = "";
 var failCount = 0;
-google.load('visualization', '1.0', {
+var usingFiles = false;
+google.charts.load('43', {
     'packages': ['corechart', 'table', 'gauge', 'controls']
 });
 $(".spinner").hide();
 
 function init() {
+    usingFiles = false;
     $("#downloadSection").empty();
     $("#act-display").empty();
     $(".spinner").show();
@@ -40,6 +67,7 @@ function datePickerOptions() {
 var efficencyUploaded;
 var activityUploaded;
 (function () {
+
     function onChangeEfficency(event) {
         var reader = new FileReader();
         reader.onload = onReaderLoadEfficency;
@@ -69,6 +97,7 @@ var activityUploaded;
 }());
 
 function checkFiles() {
+    usingFiles = true;
     $("#act-display").empty();
     if (efficencyUploaded != null) {
         calcEfficiency(efficencyUploaded);
@@ -96,6 +125,7 @@ function urlForActivity() {
 
 
 function getEfficiencyData() {
+
     $.getJSON('http://allow-any-origin.appspot.com/' + efficiencyUrl, function (data) {
         if (typeof data.rows === 'undefined') {
             console.log("undefined: maybe invalid parameters!?");
@@ -151,15 +181,21 @@ function downloadActivityData(data) {
 }
 
 function calcEfficiency(file) {
-    var Combined = new Array();
+    //todo: date sul fondo!
+    var Combined = [];
     Combined[0] = ['Hours', 'Productivity'];
     for (var i = 0; i < file.rows.length; i++) {
-        Combined[i + 1] = [i, file.rows[i][4]];
+        Combined[i + 1] = [new Date(file.rows[i][0]), file.rows[i][4]];
     }
+    console.log("cregoG");
+    console.log(file);
+    console.log("comb");
+    console.log(Combined);
+    degreeTrend = parseInt(document.getElementById("numberSpinner").value);
     //second parameter is false because first row is headers, not data.
     var data = google.visualization.arrayToDataTable(Combined, false);
     var options = {
-        'height': 600,
+        height: 600,
         title: 'Productivity for the selected range',
         vAxis: {
             title: 'Productivity',
@@ -177,20 +213,21 @@ function calcEfficiency(file) {
             trigger: 'both'
         }, // Display cross-air on focus and selection.
         legend: {
-            position: 'top',
+            position: 'top'
         },
         trendlines: {
             0: {
                 type: 'polynomial',
-                degree: 7,
+                degree: degreeTrend,
                 color: '#1c91c0',
                 lineWidth: 5,
+
                 opacity: 1
             }
         },
         series: {
             0: {
-                color: '#e2431e',
+                color: '#F6C5BA',
                 opacity: 0.5
             }
         },
@@ -199,18 +236,28 @@ function calcEfficiency(file) {
             startup: true,
             easing: 'in'
         }
+
     };
     var chart = new google.visualization.LineChart(document.getElementById('efficiency_graph'));
     chart.draw(data, options);
 }
 
+function updateProdTrend() {
+    if (efficencyUploaded != null && usingFiles)
+        calcEfficiency(efficencyUploaded);
+    if (!usingFiles)
+        getEfficiencyData();
+
+}
+
 function calcHours(file) {
-    var combinedPoints = new Array();
-    var groupBy = new Array();
-    var combinedAvg = new Array();
-    var plotAvg = new Array();
+    var combinedPoints = [];
+    var groupBy = [];
+    var combinedAvg = [];
+    var plotAvg = [];
     combinedPoints[0] = ['Hour', 'Productivity'];
     for (var i = 0; i < file.rows.length; i++) {
+        //TODO: usare Date!
         combinedPoints[i + 1] = [parseInt(file.rows[i][0].substr(11, 2)), file.rows[i][4]];
     }
     for (var i = 0; i < 24; i++) {
@@ -271,12 +318,14 @@ function calcHours(file) {
     avgChart.draw(avgData, avgOptions);
     chart.draw(data, options);
 }
+
 //This function groups the data for every hour in an array
 function filter(arr, cond) {
     return arr.filter(function (element) {
         return element[0] === cond;
     });
 }
+
 //This function finds the average productivity for an hour. (Is executed 24 times)
 function findAvg(arr) {
     var length = arr.length;
@@ -290,11 +339,11 @@ function findAvg(arr) {
 }
 
 function calcActivity(file) {
-    var Combined = new Array();
+    var Combined = [];
     var color;
     Combined[0] = ['Results', 'Select the range', {
         role: 'style'
-    },];
+    }];
     for (var i = 0; i < 50; i++) {
         switch (file.rows[i][5]) {
             case -2:
@@ -320,10 +369,10 @@ function calcActivity(file) {
     groupByCategory(file);
     //second parameter is false because first row is headers, not data.
     var data = google.visualization.arrayToDataTable(Combined, false);
-    var dashboard = new google.visualization.Dashboard(document.getElementById('numberRangeFilter_dashboard_div'));
+    var dashboard = new google.visualization.Dashboard(document.getElementById('act-numberRangeFilter_dashboard_div'));
     var control = new google.visualization.ControlWrapper({
         'controlType': 'NumberRangeFilter',
-        'containerId': 'numberRangeFilter_control_div',
+        'containerId': 'act-numberRangeFilter_control_div',
         'options': {
             'filterColumnIndex': 1,
             'minValue': Combined[50][1],
@@ -332,7 +381,7 @@ function calcActivity(file) {
     });
     var chart = new google.visualization.ChartWrapper({
         'chartType': 'BarChart',
-        'containerId': 'numberRangeFilter_chart_div',
+        'containerId': 'act-numberRangeFilter_chart_div',
         'options': {
             'height': 900,
             'legend': 'none',
@@ -348,7 +397,7 @@ function calcActivity(file) {
                     marginBottom: '100',
                     marginRight: '100'
                 }
-            },
+            }
         }
     });
     dashboard.bind(control, chart);
@@ -375,10 +424,13 @@ function groupByCategory(file) {
 }
 
 function printInfo(distracting, neutral, productive) {
-    $('#act-display').append("<h3> Total productive time: " + productive.toHHMMSS() + " <div style=' width: 18px; height: 18px;background: #2F78BD;display: inline-block;'></div> + <div style='width: 18px; height: 18px; background: #395B96; display: inline-block;'></div> </h3> ");
-    $('#act-display').append("<h3> Total neutral time: " + neutral.toHHMMSS() + "<div style='width: 18px; height: 18px; background: #655568; display: inline-block;'></div> </h3> ");
-    $('#act-display').append("<h3> Total distracting time: " + distracting.toHHMMSS() + "<div style=' width: 18px; height: 18px;background: #C5392F;display: inline-block;'></div> + <div style='width: 18px; height: 18px; background: #92343B; display: inline-block;'></div></h3>");
+    var summaryText = $('#act-display');
+
+    summaryText.append('<h3> Total productive time: ' + productive.toHHMMSS() + " <div style=' width: 18px; height: 18px;background: #2F78BD;display: inline-block;'></div> + <div style='width: 18px; height: 18px; background: #395B96; display: inline-block;'></div> </h3> ");
+    summaryText.append("<h3> Total neutral time: " + neutral.toHHMMSS() + "<div style='width: 18px; height: 18px; background: #655568; display: inline-block;'></div> </h3> ");
+    summaryText.append("<h3> Total distracting time: " + distracting.toHHMMSS() + "<div style=' width: 18px; height: 18px;background: #C5392F;display: inline-block;'></div> + <div style='width: 18px; height: 18px; background: #92343B; display: inline-block;'></div></h3>");
 }
+
 Number.prototype.toHHMMSS = function () {
     var numdays = Math.floor(this / 86400);
 
@@ -388,7 +440,6 @@ Number.prototype.toHHMMSS = function () {
 
     var numseconds = ((this % 86400) % 3600) % 60;
 
-    var string= numdays + " days " + numhours + " hours " + numminutes + " minutes " + numseconds + " seconds";
-    return string;
+    return numdays + " days " + numhours + " hours " + numminutes + " minutes " + numseconds + " seconds";
 
-}
+};

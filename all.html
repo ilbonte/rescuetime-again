@@ -10,108 +10,128 @@
     <!-- Latest compiled and minified JavaScript -->
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
     <script src="http://eternicode.github.io/bootstrap-datepicker/bootstrap-datepicker/js/bootstrap-datepicker.js"></script>
-    <link rel="stylesheet" href="http://eternicode.github.io/bootstrap-datepicker/bootstrap-datepicker/css/datepicker3.css">
-    <link rel="stylesheet" href="loader.css">
+    <link rel="stylesheet"
+          href="http://eternicode.github.io/bootstrap-datepicker/bootstrap-datepicker/css/datepicker3.css">
+    <link rel="stylesheet" href="style.css">
     <script type="text/javascript" src="https://www.google.com/jsapi"></script>
+    <script type="text/javascript"
+            src="https://www.gstatic.com/charts/loader.js"></script>
 </head>
 
 <body>
-    <div class="container-fluid">
-        <div class="row row-centered">
-            <div class="col-sm-6 col-centered">
-                <div class="page-header">
-                    <h1>More <a href="https://www.rescuetime.com/">RescueTime</a> Charts <small>Cuz we're poor!</small></h1>
-                </div>
-            </div>
-        </div>
-        <div class="row" id="controls">
-            <div class="col-sm-6">
-                <div class="form-group">
-                    <h2>Get the data</h2>
-                    <label><a href="https://www.rescuetime.com/anapi/manage">Choose your API Key</a>
-                    </label>
-                    <input type="text" class="form-control" id="api_key" placeholder="Enter API key">
-                    <div class="input-daterange input-group" id="datepicker">
-                        <span class="input-group-addon">from</span>
-                        <input type="text" class="input-sm form-control" name="start" id="from" />
-                        <span class="input-group-addon">to</span>
-                        <input type="text" class="input-sm form-control" name="end" id="to" />
-                    </div>
-                </div>
-            </div>
-            <div class="col-sm-4">
-                <br>NOTE: It may take some second to retrive and elaborate the data
-                <br>
-                <button type="button" class="btn btn-primary" onClick="init()">Elaborate</button>
-                <div class="checkbox">
-                    <label>
-                        <input type="checkbox" id="download"> Download JSON file for the selected range
-                    </label>
-                </div>
-            </div>
-            <div class="col-sm-2" id="downloadSection">
-
-            </div>
-        </div>
-        <div class="row">
-            <h2> ... OR upload your files</h2>
-            <div class="col-sm-3">
-                <h3>Activity</h3>
-                <input id="fileActivity" type="file" />
-
-            </div>
-            <div class="col-sm-3">
-                <h3>Efficency</h3>
-                <input id="fileEfficency" type="file" />
-
-            </div>
-            <div class="col-sm-4">
-                <br>
-                <button type="button" class="btn btn-primary" onClick="checkFiles()">Elaborate</button>
-            </div>
-
-        </div>
-
-        <div class="row">
-            <div class="spinner"></div>
-        </div>
-        <div class="row">
-            <div class="col-sm-12">
-                <h2>Productivity for the selected range</h2>
-                <div id="efficiency_graph"></div>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-sm-12">
-                <h2>Your average pro through the day</h2>
-                <div id="avg_hour_graph"></div>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-sm-12">
-                <h2>Productivity for hour</h2>
-                <div id="hour_graph"></div>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-sm-12">
-                <h2>Top 50 activities </h2>
-                <h2 id="act-display"></h2>
-
-                <div id="chartRangeFilter_dashboard_div">
-                    <div id="numberRangeFilter_control_div"></div>
-
-                    <div id="numberRangeFilter_chart_div"></div>
-                </div>
+<div class="container-fluid">
+    <div class="row row-centered">
+        <div class="col-sm-6 col-centered">
+            <div class="page-header">
+                <h1>More <a href="https://www.rescuetime.com/">RescueTime</a> Charts
+                    <small>Cuz we're poor!</small>
+                </h1>
             </div>
         </div>
     </div>
+    <div class="row" id="controls">div > div.input-group
+        <div class="col-sm-6">
+            <div class="form-group">
+                <h2>Get the data</h2>
+                <label><a href="https://www.rescuetime.com/anapi/manage" target="_blank">Choose your API Key</a>
+                </label>
+                <input type="text" class="form-control" id="api_key" placeholder="Enter API key"
+                       value="">
 
-    <script src="app.js"></script>
-    <script>
-        datePickerOptions();
-        //init()
-    </script>
+                <div class="input-daterange input-group" id="datepicker">
+                    <span class="input-group-addon">from</span>
+                    <input type="text" class="input-sm form-control" name="start" id="from"/>
+                    <span class="input-group-addon">to</span>
+                    <input type="text" class="input-sm form-control" name="end" id="to"/>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-4">
+            <br>NOTE: It may take some second to retrive and elaborate the data
+            <br>
+            <button type="button" class="btn btn-primary" onClick="init()">Elaborate</button>
+            <div class="checkbox">
+                <label>
+                    <input type="checkbox" id="download"> Download JSON file for the selected range
+                </label>
+            </div>
+        </div>
+        <div class="col-sm-2" id="downloadSection">
+
+        </div>
+    </div>
+    <div class="row">
+        <h2> ... OR upload your files</h2>
+
+        <div class="col-sm-3">
+            <h3>Activity</h3>
+            <input id="fileActivity" type="file"/>
+
+        </div>
+        <div class="col-sm-3">
+            <h3>Efficency</h3>
+            <input id="fileEfficency" type="file"/>
+
+        </div>
+        <div class="col-sm-4">
+            <br>
+            <button type="button" class="btn btn-primary" onClick="checkFiles()">Elaborate</button>
+        </div>
+
+    </div>
+
+    <div class="row">
+        <div class="spinner"></div>
+    </div>
+    <div class="row">
+        <div class="col-sm-12">
+            <h2>Productivity for the selected range</h2>
+            <div class="input-group">
+                <span class="input-group-addon">Trendline degree (linear-50)</span>
+                <input type="number" id="numberSpinner" min="1" max="50" aria-valuemax="55" class="form-control"
+                       value="10"/> <span class="input-group-btn" onClick="updateProdTrend()">
+        <button class="btn btn-default" type="button">Go!</button>
+      </span>
+            </div>
+
+            <div id="efficiency_graph"></div>
+
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-12">
+            <h2>Your average pro through the day</h2>
+
+            <div id="avg_hour_graph"></div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-12">
+            <h2>Productivity for hour</h2>
+
+            <div id="hour_graph"></div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-12">
+            <h2>Top 50 activities </h2>
+
+            <h2 id="act-display"></h2>
+
+            <div id="act-chartRangeFilter_dashboard_div">
+                <div id="act-numberRangeFilter_control_div"></div>
+
+                <div id="act-numberRangeFilter_chart_div"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="app.js"></script>
+<script>
+    datePickerOptions();
+    //init()
+</script>
 </body>
 
 </html>
