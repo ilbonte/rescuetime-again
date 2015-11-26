@@ -86,9 +86,10 @@
     <div class="row">
         <div class="col-sm-12">
             <h2>Productivity for the selected range</h2>
+
             <div class="input-group">
                 <span class="input-group-addon">Trendline degree (linear-50)</span>
-                <input type="number" id="numberSpinner" min="1" max="50" aria-valuemax="55" class="form-control"
+                <input type="number" id="numberSpinner" min="1" max="50"  class="form-control"
                        value="10"/> <span class="input-group-btn" onClick="updateProdTrend()">
         <button class="btn btn-default" type="button">Go!</button>
       </span>
@@ -118,6 +119,13 @@
 
             <h2 id="act-display"></h2>
 
+            <div class="input-group">
+                <span class="input-group-addon">Trendline degree (linear-50)</span>
+                <input type="number" id="numberSpinnerTop" min="3" max="100"  class="form-control"
+                       value="50"/> <span class="input-group-btn" onClick="updateTopAct()">
+        <button class="btn btn-default" type="button">Go!</button>
+      </span>
+            </div>
             <div id="act-chartRangeFilter_dashboard_div">
                 <div id="act-numberRangeFilter_control_div"></div>
 

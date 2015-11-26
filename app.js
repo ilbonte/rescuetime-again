@@ -34,6 +34,7 @@ var activityUrl = "",
     efficiencyUrl = "";
 var failCount = 0;
 var usingFiles = false;
+var topAct = 50;
 google.charts.load('43', {
     'packages': ['corechart', 'table', 'gauge', 'controls']
 });
@@ -181,16 +182,13 @@ function downloadActivityData(data) {
 }
 
 function calcEfficiency(file) {
-    //todo: date sul fondo!
+
     var Combined = [];
     Combined[0] = ['Hours', 'Productivity'];
     for (var i = 0; i < file.rows.length; i++) {
         Combined[i + 1] = [new Date(file.rows[i][0]), file.rows[i][4]];
     }
-    console.log("cregoG");
-    console.log(file);
-    console.log("comb");
-    console.log(Combined);
+
     degreeTrend = parseInt(document.getElementById("numberSpinner").value);
     //second parameter is false because first row is headers, not data.
     var data = google.visualization.arrayToDataTable(Combined, false);
@@ -256,9 +254,9 @@ function calcHours(file) {
     var combinedAvg = [];
     var plotAvg = [];
     combinedPoints[0] = ['Hour', 'Productivity'];
+    console.log("debg");
     for (var i = 0; i < file.rows.length; i++) {
-        //TODO: usare Date!
-        combinedPoints[i + 1] = [parseInt(file.rows[i][0].substr(11, 2)), file.rows[i][4]];
+        combinedPoints[i + 1] = [parseInt(file.rows[i][0].substr(11, 2)), file.rows[i][4]];//note: I can't use Date()
     }
     for (var i = 0; i < 24; i++) {
         groupBy[i] = filter(combinedPoints, i);
@@ -344,7 +342,9 @@ function calcActivity(file) {
     Combined[0] = ['Results', 'Select the range', {
         role: 'style'
     }];
-    for (var i = 0; i < 50; i++) {
+   // topAct = parseInt(document.getElementById("numberSpinnerTop"));
+    // TODO: fixthis
+    for (var i = 0; i < topAct; i++) {
         switch (file.rows[i][5]) {
             case -2:
                 color = "#C5392F";
@@ -363,6 +363,7 @@ function calcActivity(file) {
                 break;
         }
         var tmp = file.rows[i][1];
+        //todo: inseire tempo formattato
         var mins = tmp / 60;
         Combined[i + 1] = [file.rows[i][3], mins, color];
     }
@@ -375,7 +376,7 @@ function calcActivity(file) {
         'containerId': 'act-numberRangeFilter_control_div',
         'options': {
             'filterColumnIndex': 1,
-            'minValue': Combined[50][1],
+            'minValue': Combined[topAct][1],
             'maxValue': Combined[1][1]
         }
     });
@@ -404,6 +405,7 @@ function calcActivity(file) {
     dashboard.draw(data);
 }
 
+
 function groupByCategory(file) {
     var distracting = 0,
         neutral = 0,
@@ -431,6 +433,7 @@ function printInfo(distracting, neutral, productive) {
     summaryText.append("<h3> Total distracting time: " + distracting.toHHMMSS() + "<div style=' width: 18px; height: 18px;background: #C5392F;display: inline-block;'></div> + <div style='width: 18px; height: 18px; background: #92343B; display: inline-block;'></div></h3>");
 }
 
+
 Number.prototype.toHHMMSS = function () {
     var numdays = Math.floor(this / 86400);
 
@@ -443,3 +446,12 @@ Number.prototype.toHHMMSS = function () {
     return numdays + " days " + numhours + " hours " + numminutes + " minutes " + numseconds + " seconds";
 
 };
+
+
+function updateTopAct() {
+    //TODO: FIX= potrei aver caricato solo un file e  non tutti e due ma usingfiles potrebbe essere comunque a true
+    if (activityUploaded != null && usingFiles)
+        calcActivity(activityUploaded);
+    if (!usingFiles)
+        getActivityData();
+}
