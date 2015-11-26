@@ -29,7 +29,7 @@
             </div>
         </div>
     </div>
-    <div class="row" id="controls">div > div.input-group
+    <div class="row" id="controls">
         <div class="col-sm-6">
             <div class="form-group">
                 <h2>Get the data</h2>
@@ -89,7 +89,7 @@
 
             <div class="input-group">
                 <span class="input-group-addon">Trendline degree (linear-50)</span>
-                <input type="number" id="numberSpinner" min="1" max="50"  class="form-control"
+                <input type="number" id="numberSpinner" min="1" max="50" class="form-control"
                        value="10"/> <span class="input-group-btn" onClick="updateProdTrend()">
         <button class="btn btn-default" type="button">Go!</button>
       </span>
@@ -119,12 +119,28 @@
 
             <h2 id="act-display"></h2>
 
-            <div class="input-group">
-                <span class="input-group-addon">Trendline degree (linear-50)</span>
-                <input type="number" id="numberSpinnerTop" min="3" max="100"  class="form-control"
-                       value="50"/> <span class="input-group-btn" onClick="updateTopAct()">
-        <button class="btn btn-default" type="button">Go!</button>
+            <div id="customControls">
+                <div class="input-group">
+                    <span class="input-group-addon">Top x activities. x=</span>
+                    <input type="number" id="numberSpinnerTop" min="3" max="200" class="form-control"
+                           value="50"/> <span class="input-group-btn" onClick="updateTopAct()">
+        <button class="btn btn-default" type="button">Refresh</button>
       </span>
+
+                </div>
+                <div class="dropup">
+                    <button class="btn btn-default dropdown-toggle" type="button" id="time" data-toggle="dropdown"
+                            aria-haspopup="true" aria-expanded="true">
+                        Select unit
+                        <span class="caret"></span>
+                    </button>
+                    <ul class="dropdown-menu" aria-labelledby="time">
+                        <li><a href="#">Minutes</a></li>
+                        <li><a href="#">Hours</a></li>
+                        <li><a href="#">Days</a></li>
+
+                    </ul>
+                </div>
             </div>
             <div id="act-chartRangeFilter_dashboard_div">
                 <div id="act-numberRangeFilter_control_div"></div>

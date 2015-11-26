@@ -27,6 +27,10 @@ div > div.input-group{
     width: 320px;
 }
 
+#customControls{
+    display: inline-flex;
+}
+
 @-webkit-keyframes rotateplane {
     0% {
         -webkit-transform: perspective(120px)

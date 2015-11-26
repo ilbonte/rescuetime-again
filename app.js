@@ -22,7 +22,6 @@
  * */
 
 
-var degreeTrend = 10;
 var key = "",
     rb = "",
     re = "",
@@ -34,7 +33,8 @@ var activityUrl = "",
     efficiencyUrl = "";
 var failCount = 0;
 var usingFiles = false;
-var topAct = 50;
+var topAct = 90;
+var degreeTrend = 10;
 google.charts.load('43', {
     'packages': ['corechart', 'table', 'gauge', 'controls']
 });
@@ -43,7 +43,7 @@ $(".spinner").hide();
 function init() {
     usingFiles = false;
     $("#downloadSection").empty();
-    $("#act-display").empty();
+
     $(".spinner").show();
     key = document.getElementById('api_key').value;
     rb = document.getElementById('from').value;
@@ -182,7 +182,6 @@ function downloadActivityData(data) {
 }
 
 function calcEfficiency(file) {
-
     var Combined = [];
     Combined[0] = ['Hours', 'Productivity'];
     for (var i = 0; i < file.rows.length; i++) {
@@ -249,6 +248,8 @@ function updateProdTrend() {
 }
 
 function calcHours(file) {
+
+
     var combinedPoints = [];
     var groupBy = [];
     var combinedAvg = [];
@@ -337,9 +338,12 @@ function findAvg(arr) {
 }
 
 function calcActivity(file) {
+    $("#act-display").empty();
+    console.log(topAct);
+    topAct=document.getElementById("numberSpinnerTop").value;
     var Combined = [];
     var color;
-    Combined[0] = ['Results', 'Select the range', {
+    Combined[0] = ['Results', 'Minutes', {
         role: 'style'
     }];
    // topAct = parseInt(document.getElementById("numberSpinnerTop"));
@@ -363,7 +367,7 @@ function calcActivity(file) {
                 break;
         }
         var tmp = file.rows[i][1];
-        //todo: inseire tempo formattato
+        //todo: inseire tempo formattato o almeno la possibilità di sceglire minuti/secondi etc
         var mins = tmp / 60;
         Combined[i + 1] = [file.rows[i][3], mins, color];
     }
@@ -449,9 +453,11 @@ Number.prototype.toHHMMSS = function () {
 
 
 function updateTopAct() {
-    //TODO: FIX= potrei aver caricato solo un file e  non tutti e due ma usingfiles potrebbe essere comunque a true
-    if (activityUploaded != null && usingFiles)
+    if (activityUploaded != null && usingFiles){
+       // $("#act-numberRangeFilter_chart_div > div").remove();
         calcActivity(activityUploaded);
+    }
+
     if (!usingFiles)
         getActivityData();
 }
