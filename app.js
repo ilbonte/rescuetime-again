@@ -283,31 +283,15 @@ function calcHours(file) {
     console.log("grupho");
     console.log(groupByHours);
     for (var i = 0; i < 24; i++) {
-        combinedSumHours[i] = [i, findSum(groupByHours[i])/3600];
+        combinedSumHours[i] = [i, findSum(groupByHours[i]) / 3600];
         combinedAvg[i] = [i, findAvg(groupBy[i])];
     }
     console.log(combinedSumHours);
     //second parameter is false because first row is headers, not data.
-    // var data = google.visualization.arrayToDataTable(combinedPoints, false);
+
     var avgData = google.visualization.arrayToDataTable(combinedAvg, true);
     var hoursData = google.visualization.arrayToDataTable(combinedSumHours, true);
-    /*  var options = {
-     title: 'Productivity for hour',
-     'height': 600,
-     hAxis: {
-     title: 'Hour',
-     gridlines: {
-     count: 24
-     }
-     },
-     vAxis: {
-     title: 'Productivity',
-     minValue: 0
-     },
-     legend: {
-     position: 'bottom'
-     }
-     };*/
+
     var avgOptions = {
         title: 'Your average pro through the day',
         'height': 600,
@@ -349,11 +333,11 @@ function calcHours(file) {
     };
     var avgChart = new google.visualization.LineChart(document.getElementById('avg_hour_graph'));
     var hoursChart = new google.visualization.ColumnChart(document.getElementById('sum_hour_graph'));
-    // var chart = new google.visualization.ScatterChart(document.getElementById('hour_graph'));
+
     $(".spinner").hide();
     avgChart.draw(avgData, avgOptions);
     hoursChart.draw(hoursData, hoursOptions);
-    // chart.draw(data, options);
+
 }
 
 //This function groups the data for every hour in an array
