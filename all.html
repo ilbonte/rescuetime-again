@@ -106,11 +106,18 @@
             <div id="avg_hour_graph"></div>
         </div>
     </div>
-    <div class="row">
+<!--    <div class="row">
         <div class="col-sm-12">
             <h2>Productivity for hour</h2>
 
             <div id="hour_graph"></div>
+        </div>
+    </div>-->
+    <div class="row">
+        <div class="col-sm-12">
+            <h2>Total minutes for hour</h2>
+
+            <div id="sum_hour_graph"></div>
         </div>
     </div>
     <div class="row">
@@ -135,10 +142,9 @@
                         <span class="caret"></span>
                     </button>
                     <ul class="dropdown-menu" aria-labelledby="time">
-                        <li><a href="#">Minutes</a></li>
-                        <li><a href="#">Hours</a></li>
-                        <li><a href="#">Days</a></li>
-
+                        <li value="60">Minutes</li>
+                        <li value="3600">Hours</li>
+                        <li value="86400">Days</li>
                     </ul>
                 </div>
             </div>
