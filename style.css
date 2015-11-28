@@ -13,7 +13,9 @@
 
     margin-right: -4px;
 }
-
+.page-header{
+    text-align: center;
+}
 .spinner {
     width: 30px;
     height: 30px;
@@ -23,11 +25,16 @@
     animation: rotateplane 1.2s infinite ease-in-out;
 }
 
-div > div.input-group{
+.input-group {
+    float: left;
+    margin-right: 20px;
+}
+
+div > div.input-group {
     width: 320px;
 }
 
-#customControls{
+#customControls {
     display: inline-flex;
 }
 

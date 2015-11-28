@@ -21,10 +21,11 @@
 <body>
 <div class="container-fluid">
     <div class="row row-centered">
-        <div class="col-sm-6 col-centered">
+        <div class="col-sm-8 col-centered">
             <div class="page-header">
-                <h1>More <a href="https://www.rescuetime.com/">RescueTime</a> Charts
-                    <small>Cuz we're poor!</small>
+                <h1>More <a target="_blank" href="https://www.rescuetime.com/">RescueTime</a> Charts
+                    <small>Cuz <a href="https://www.reddit.com/r/dataisbeautiful/top/?sort=top&t=month" target="_blank">data
+                        are beautiful!</a></small>
                 </h1>
             </div>
         </div>
@@ -32,7 +33,7 @@
     <div class="row" id="controls">
         <div class="col-sm-6">
             <div class="form-group">
-                <h2>Get the data</h2>
+                <h2>Get the data from RescueTime</h2>
                 <label><a href="https://www.rescuetime.com/anapi/manage" target="_blank">Choose your API Key</a>
                 </label>
                 <input type="text" class="form-control" id="api_key" placeholder="Enter API key"
@@ -83,38 +84,58 @@
     <div class="row">
         <div class="spinner"></div>
     </div>
-    <div class="row">
+    <div class="row chart">
         <div class="col-sm-12">
-            <h2>Productivity for the selected range</h2>
+            <!--<h2>Productivity for the selected range</h2>-->
 
             <div class="input-group">
+
                 <span class="input-group-addon">Trendline degree (linear-50)</span>
                 <input type="number" id="numberSpinner" min="1" max="50" class="form-control"
                        value="10"/> <span class="input-group-btn" onClick="updateProdTrend()">
         <button class="btn btn-default" type="button">Go!</button>
       </span>
+
             </div>
+            <label class="checkbox-inline"><input type="checkbox" id="showDates">Show dates on x-axis (no trend line
+                available)</label>
 
             <div id="efficiency_graph"></div>
 
         </div>
     </div>
-    <div class="row">
+    <div class="row chart">
         <div class="col-sm-12">
-            <h2>Your average pro through the day</h2>
+            <!--<h2>Your average pro through the day</h2>-->
 
             <div id="avg_hour_graph"></div>
         </div>
     </div>
-
-    <div class="row">
+    <div class="row chart">
         <div class="col-sm-12">
-            <h2>Total minutes for hour</h2>
+            <!--<h2>Total minutes for hour</h2>-->
 
             <div id="sum_hour_graph"></div>
         </div>
     </div>
-    <div class="row">
+
+
+    <div class="row chart">
+        <div class="col-sm-12">
+            <!--<h2>Your average pro through the day</h2>-->
+
+            <div id="avg_day_graph"></div>
+        </div>
+    </div>
+    <div class="row chart">
+        <div class="col-sm-12">
+            <!--<h2>Total minutes for hour</h2>-->
+
+            <div id="sum_day_graph"></div>
+        </div>
+    </div>
+
+    <div class="row chart">
         <div class="col-sm-12">
             <h2>Top 50 activities </h2>
 

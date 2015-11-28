@@ -36,16 +36,19 @@ var usingFiles = false;
 var topAct = 90;
 var degreeTrend = 10;
 var unit = 60;
+var unitText = "Minutes";
 google.charts.load('43', {
-    'packages': ['corechart', 'table', 'gauge', 'controls']
+    'packages': ['corechart', 'table', 'gauge', 'controls', 'bar','line']
 });
 $(".spinner").hide();
+$(".chart").hide();
 
 function init() {
     usingFiles = false;
     $("#downloadSection").empty();
 
     $(".spinner").show();
+    $(".chart").show();
     key = document.getElementById('api_key').value;
     rb = document.getElementById('from').value;
     re = document.getElementById('to').value;
@@ -97,13 +100,19 @@ var activityUploaded;
     $(".dropup li").on("click", function () {
 
         unit = this.value;
+        unitText = $(this).text();
         updateTopAct();
+    });
+    $("#showDates").on("click", function () {
+        init();
     });
     document.getElementById('fileEfficency').addEventListener('change', onChangeEfficency);
     document.getElementById('fileActivity').addEventListener('change', onChangeActivity);
 }());
 
 function checkFiles() {
+    
+    $(".chart").show();
     usingFiles = true;
     $("#act-display").empty();
     if (efficencyUploaded != null) {
@@ -176,16 +185,15 @@ function getActivityData() {
 function downloadEfficiencyData(data) {
     var JSONString = JSON.stringify(data);
     var file = "text/json;charset=utf-8," + encodeURIComponent(JSONString);
-
-    $('<a href="data:' + file + '" download="EfficiencyData.json" id="downEfficency">downloadEfficiencyData</a> <br>').appendTo('#downloadSection');
-    //$('#downEfficency').get(0).click();
+    $('<a href="data:' + file + '" download="EfficiencyData' + rb + ' to ' + re + '.json" id="downEfficency">Download Efficiency Data</a> <br>').appendTo('#downloadSection');
+    $('#downEfficency').get(0).click();
 }
 
 function downloadActivityData(data) {
     var JSONString = JSON.stringify(data);
     var file = "text/json;charset=utf-8," + encodeURIComponent(JSONString);
-    $('<a href="data:' + file + '" download="ActivityData.json" id="downEfficency">downloadActivityDataa</a> <br>').appendTo('#downloadSection');
-    //$('#downEfficency').get(0).click();
+    $('<a href="data:' + file + '" download="ActivityData' + rb + ' to ' + re + '.json" id="downEfficency">Download Activity Data</a> <br>').appendTo('#downloadSection');
+    $('#downEfficency').get(0).click();
 }
 
 function calcEfficiency(file) {
@@ -194,9 +202,14 @@ function calcEfficiency(file) {
     //TODO: vedere sto bug
     for (var i = 0; i < file.rows.length; i++) {
 //        Combined[i + 1] = [new Date(file.rows[i][0]), file.rows[i][4]]; OLD
-        Combined[i + 1] = [i, (file.rows[i][4] * file.rows[i][1]) / 3600]; //"normalized"
-        //  Combined[i + 1] = [new Date(file.rows[i][0]),  file.rows[i][4]];
+        //   Combined[i + 1] = [i, (file.rows[i][4] * file.rows[i][1]) / 3600]; //"normalized"
+        if (document.getElementById("showDates").checked)
+            Combined[i + 1] = [new Date(file.rows[i][0]), (file.rows[i][4] * file.rows[i][1]) / 3600]; //"normalized"
+        else
+            Combined[i + 1] = [i, (file.rows[i][4] * file.rows[i][1]) / 3600];
+
     }
+
 
     degreeTrend = parseInt(document.getElementById("numberSpinner").value);
     //second parameter is false because first row is headers, not data.
@@ -204,6 +217,7 @@ function calcEfficiency(file) {
     var options = {
         height: 600,
         title: 'Productivity for the selected range',
+        'theme': 'material',
         vAxis: {
             title: 'Productivity',
             titleTextStyle: {
@@ -245,7 +259,7 @@ function calcEfficiency(file) {
         }
 
     };
-    console.log(degreeTrend);
+
     var chart = new google.visualization.LineChart(document.getElementById('efficiency_graph'));
     chart.draw(data, options);
 }
@@ -261,40 +275,75 @@ function updateProdTrend() {
 function calcHours(file) {
 
 
-    var combinedPoints = [];
+    var combinedPointsHourEfficiency = [];
     var combinedPointsHours = [];
-    var groupBy = [];
+    var combinedPointsDayEfficiency = [];
+    var combinedPointsDay= [];
+
+    var groupEfficiencyByHour = [];
     var groupByHours = [];
+    var groupEfficiencyByDay = [];
+    var groupByDay= [];
+
+
     var combinedAvg = [];
+    var combinedAvgDay = [];
     var combinedSumHours = [];
-    var plotAvg = [];
-    combinedPoints[0] = ['Hour', 'Productivity'];
-    combinedPointsHours[0] = ['Hour', 'Total Time']
-    console.log("debg");
-    console.log(file);
+    var combinedSumDay = [];
+
+    combinedPointsHourEfficiency[0] = ['Hour', 'Productivity'];
+    combinedPointsHours[0] = ['Hour', 'Total Time'];
+
+    combinedPointsDayEfficiency[0] = ['Day', 'Productivity'];
+    combinedPointsDay[0] = ['Hour', 'Total Time'];
+
+
+
+    var dateString;
     for (var i = 0; i < file.rows.length; i++) {
-        combinedPoints[i + 1] = [parseInt(file.rows[i][0].substr(11, 2)), (file.rows[i][4] * file.rows[i][1]) / 3600];//note: I can't use Date() because rescuetime log the date based on user's system time which is in GMT but when using Date() on the string in the JSON is converted in UTC
-        combinedPointsHours[i + 1] = [parseInt(file.rows[i][0].substr(11, 2)), file.rows[i][1]];
+        dateString = file.rows[i][0];
+        combinedPointsHourEfficiency[i + 1] = [parseInt(dateString.substr(11, 2)), (file.rows[i][4] * file.rows[i][1]) / 3600];//note: I can't use Date() because rescuetime log the date based on user's system time which is in GMT but when using Date() on the string in the JSON is converted in UTC
+        combinedPointsHours[i + 1] = [parseInt(dateString.substr(11, 2)), file.rows[i][1]];
+
+
+
+        combinedPointsDayEfficiency[i + 1] = [new Date(dateString.substr(0, 10)).getDay(), (file.rows[i][4] * file.rows[i][1]) / 3600];
+        combinedPointsDay[i + 1] = [new Date(dateString.substr(0, 10)).getDay(), file.rows[i][1]];
+
     }
     for (var i = 0; i < 24; i++) {
-        groupBy[i] = filter(combinedPoints, i);
+        groupEfficiencyByHour[i] = filter(combinedPointsHourEfficiency, i);
         groupByHours[i] = filter(combinedPointsHours, i);
     }
-    console.log("grupho");
-    console.log(groupByHours);
+    for (var i = 0; i < 7; i++) {
+        groupEfficiencyByDay[i] = filter(combinedPointsDayEfficiency, i);
+        groupByDay[i] = filter(combinedPointsDay, i);
+
+    }
+
+
+
     for (var i = 0; i < 24; i++) {
         combinedSumHours[i] = [i, findSum(groupByHours[i]) / 3600];
-        combinedAvg[i] = [i, findAvg(groupBy[i])];
+        combinedAvg[i] = [i, findAvg(groupEfficiencyByHour[i])];
     }
-    console.log(combinedSumHours);
+    for (var i = 0; i < 7; i++) {
+        combinedSumDay[i]= [i, findSum(groupByDay[i]) / 3600];
+        combinedAvgDay[i] = [i, findAvg(groupEfficiencyByDay[i])];
+    }
+
+
     //second parameter is false because first row is headers, not data.
 
     var avgData = google.visualization.arrayToDataTable(combinedAvg, true);
+    var avgDayData = google.visualization.arrayToDataTable(combinedAvgDay, true);
     var hoursData = google.visualization.arrayToDataTable(combinedSumHours, true);
+    var dayData = google.visualization.arrayToDataTable(combinedSumDay, true);
 
     var avgOptions = {
-        title: 'Your average pro through the day',
+        title: 'Your average productivity by hour during the day',
         'height': 600,
+        'theme': 'material',
         curveType: 'function',
         hAxis: {
             title: 'Hour',
@@ -319,13 +368,61 @@ function calcHours(file) {
         }
     };
     var hoursOptions = {
-        title: 'Total hours',
+        chart: {
+            title: 'Total hours spent by hour'
+        },
+        'theme': 'material',
+
         hAxis: {
             title: 'Hours',
             gridlines: {
                 count: 24
             }
 
+        },
+        legend: {
+            position: 'none'
+        },
+        vAxis: {
+            title: 'Minutes logged'
+        }
+    };
+    var avgDayOptions = {
+        chart: {
+            title: 'productivity by day of week',
+            subtitle: '0=Sunday, 6=Saturday'
+        },
+        curveType: 'function',
+        'theme': 'material',
+        hAxis: {
+            title: 'Days',
+            gridlines: {
+                count: 7
+            }
+
+        },
+        legend: {
+            position: 'none'
+        },
+        vAxis: {
+            title: 'Productivity logged'
+        }
+    };
+    var dayOptions = {
+        chart: {
+            title: 'Total hours spent by hour'
+        },
+        'theme': 'material',
+
+        hAxis: {
+            title: 'Hours',
+            gridlines: {
+                count: 24
+            }
+
+        },
+        legend: {
+            position: 'none'
         },
         vAxis: {
             title: 'Minutes logged'
@@ -334,9 +431,17 @@ function calcHours(file) {
     var avgChart = new google.visualization.LineChart(document.getElementById('avg_hour_graph'));
     var hoursChart = new google.visualization.ColumnChart(document.getElementById('sum_hour_graph'));
 
+
+    var avgDayChart  = new google.visualization.LineChart(document.getElementById('avg_day_graph'));
+    var daysChart = new google.visualization.ColumnChart(document.getElementById('sum_day_graph'));
+
+
     $(".spinner").hide();
     avgChart.draw(avgData, avgOptions);
     hoursChart.draw(hoursData, hoursOptions);
+
+    avgDayChart.draw(avgDayData, avgDayOptions);
+    daysChart.draw(dayData, dayOptions);
 
 }
 
@@ -347,24 +452,23 @@ function filter(arr, cond) {
     });
 }
 
-//This function finds the average productivity for an hour. (Is executed 24 times)
-//TODO: usare sum in avg!
+
 function findAvg(arr) {
-    var length = arr.length;
-    var avg;
-    var sum = 0;
-    for (var i = 0; i < length; i++) {
-        sum += arr[i][1];
-    }
-    avg = sum / length;
+    /* var length = arr.length;
+     var avg;
+     var sum = 0;
+     for (var i = 0; i < length; i++) {
+     sum += arr[i][1];
+     }*/
+    avg = findSum(arr) / arr.length;
     return avg;
 }
 
 function findSum(arr) {
-    var length = arr.length;
+
 
     var sum = 0;
-    for (var i = 0; i < length; i++) {
+    for (var i = 0; i < arr.length; i++) {
         sum += arr[i][1];
     }
     return sum;
@@ -374,9 +478,10 @@ function calcActivity(file) {
     $("#act-display").empty();
 
     topAct = document.getElementById("numberSpinnerTop").value;
+    $()
     var Combined = [];
     var color;
-    Combined[0] = ['Results', 'Minutes', {
+    Combined[0] = ['Results', unitText, {
         role: 'style'
     }];
     // topAct = parseInt(document.getElementById("numberSpinnerTop"));
@@ -400,7 +505,7 @@ function calcActivity(file) {
                 break;
         }
         var tmp = file.rows[i][1];
-        //todo: inseire tempo formattato o almeno la possibilità di sceglire minuti/secondi etc
+
         var mins = tmp / unit;
         Combined[i + 1] = [file.rows[i][3], mins, color];
     }
@@ -409,23 +514,25 @@ function calcActivity(file) {
     var data = google.visualization.arrayToDataTable(Combined, false);
     var dashboard = new google.visualization.Dashboard(document.getElementById('act-numberRangeFilter_dashboard_div'));
     var control = new google.visualization.ControlWrapper({
-        'controlType': 'NumberRangeFilter',
-        'containerId': 'act-numberRangeFilter_control_div',
-        'options': {
-            'filterColumnIndex': 1,
-            'minValue': Combined[topAct][1],
-            'maxValue': Combined[1][1]
+        controlType: 'NumberRangeFilter',
+        containerId: 'act-numberRangeFilter_control_div',
+        options: {
+            filterColumnIndex: 1,
+            minValue: Combined[topAct][1],
+            maxValue: Combined[1][1]
         }
     });
     var chart = new google.visualization.ChartWrapper({
-        'chartType': 'BarChart',
-        'containerId': 'act-numberRangeFilter_chart_div',
-        'options': {
-            'height': 900,
-            'legend': 'none',
-            'chartArea': {
-                'width': '75%',
-                'height': '90%'
+        chartType: 'BarChart',
+        containerId: 'act-numberRangeFilter_chart_div',
+
+        options: {
+            'theme': 'material',
+            height: 900,
+            legend: 'none',
+            chartArea: {
+                width: '75%',
+                height: '90%'
             },
             vAxis: {
                 textStyle: {
