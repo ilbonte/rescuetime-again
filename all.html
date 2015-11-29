@@ -37,13 +37,13 @@
                 <label><a href="https://www.rescuetime.com/anapi/manage" target="_blank">Choose your API Key</a>
                 </label>
                 <input type="text" class="form-control" id="api_key" placeholder="Enter API key"
-                       value="">
+                       value="B63ZDoTfhcZit7t76wEuSKnKrTOe_IO7BF3OgmRo">
 
                 <div class="input-daterange input-group" id="datepicker">
                     <span class="input-group-addon">from</span>
-                    <input type="text" class="input-sm form-control" name="start" id="from"/>
+                    <input type="text" class="input-sm form-control" name="start" id="from" value="2015-11-01"/>
                     <span class="input-group-addon">to</span>
-                    <input type="text" class="input-sm form-control" name="end" id="to"/>
+                    <input type="text" class="input-sm form-control" name="end" id="to" value="2015-11-28"/>
                 </div>
             </div>
         </div>
@@ -92,7 +92,7 @@
 
                 <span class="input-group-addon">Trendline degree (linear-50)</span>
                 <input type="number" id="numberSpinner" min="1" max="50" class="form-control"
-                       value="10"/> <span class="input-group-btn" onClick="updateProdTrend()">
+                       value="20"/> <span class="input-group-btn" onClick="updateProdTrend()">
         <button class="btn btn-default" type="button">Go!</button>
       </span>
 
@@ -111,11 +111,18 @@
             <div id="avg_hour_graph"></div>
         </div>
     </div>
+<!--    <div class="row chart">
+        <div class="col-sm-12">
+            &lt;!&ndash;<h2>Total minutes for hour</h2>&ndash;&gt;
+
+            <div id="sum_hour_graph"></div>
+        </div>
+    </div>-->
     <div class="row chart">
         <div class="col-sm-12">
             <!--<h2>Total minutes for hour</h2>-->
 
-            <div id="sum_hour_graph"></div>
+            <div id="combo_hour_graph"></div>
         </div>
     </div>
 
@@ -127,11 +134,19 @@
             <div id="avg_day_graph"></div>
         </div>
     </div>
+
+    <!--<div class="row chart">
+        <div class="col-sm-12">
+            &lt;!&ndash;<h2>Total minutes for hour</h2>&ndash;&gt;
+
+            <div id="sum_day_graph"></div>
+        </div>
+    </div>-->
     <div class="row chart">
         <div class="col-sm-12">
             <!--<h2>Total minutes for hour</h2>-->
 
-            <div id="sum_day_graph"></div>
+            <div id="combo_day_graph"></div>
         </div>
     </div>
 

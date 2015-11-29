@@ -34,11 +34,11 @@ var activityUrl = "",
 var failCount = 0;
 var usingFiles = false;
 var topAct = 90;
-var degreeTrend = 10;
+var degreeTrend = 20;
 var unit = 60;
 var unitText = "Minutes";
 google.charts.load('43', {
-    'packages': ['corechart', 'table', 'gauge', 'controls', 'bar','line']
+    'packages': ['corechart', 'table', 'gauge', 'controls', 'bar', 'line']
 });
 $(".spinner").hide();
 $(".chart").hide();
@@ -111,7 +111,7 @@ var activityUploaded;
 }());
 
 function checkFiles() {
-    
+
     $(".chart").show();
     usingFiles = true;
     $("#act-display").empty();
@@ -229,6 +229,7 @@ function calcEfficiency(file) {
             titleTextStyle: {
                 color: '#FF0000'
             }
+
         },
         crosshair: {
             trigger: 'both'
@@ -277,13 +278,16 @@ function calcHours(file) {
 
     var combinedPointsHourEfficiency = [];
     var combinedPointsHours = [];
+    var comboHours = [];
+
     var combinedPointsDayEfficiency = [];
-    var combinedPointsDay= [];
+    var combinedPointsDay = [];
+    var comboDay = [];
 
     var groupEfficiencyByHour = [];
     var groupByHours = [];
     var groupEfficiencyByDay = [];
-    var groupByDay= [];
+    var groupByDay = [];
 
 
     var combinedAvg = [];
@@ -291,12 +295,14 @@ function calcHours(file) {
     var combinedSumHours = [];
     var combinedSumDay = [];
 
+
     combinedPointsHourEfficiency[0] = ['Hour', 'Productivity'];
     combinedPointsHours[0] = ['Hour', 'Total Time'];
+    comboHours[0] = ['Hour', 'Productivity', 'Total Time'];
 
     combinedPointsDayEfficiency[0] = ['Day', 'Productivity'];
     combinedPointsDay[0] = ['Hour', 'Total Time'];
-
+    comboDay[0] = ['Hour', 'Productivity', 'Total Time'];
 
 
     var dateString;
@@ -304,7 +310,6 @@ function calcHours(file) {
         dateString = file.rows[i][0];
         combinedPointsHourEfficiency[i + 1] = [parseInt(dateString.substr(11, 2)), (file.rows[i][4] * file.rows[i][1]) / 3600];//note: I can't use Date() because rescuetime log the date based on user's system time which is in GMT but when using Date() on the string in the JSON is converted in UTC
         combinedPointsHours[i + 1] = [parseInt(dateString.substr(11, 2)), file.rows[i][1]];
-
 
 
         combinedPointsDayEfficiency[i + 1] = [new Date(dateString.substr(0, 10)).getDay(), (file.rows[i][4] * file.rows[i][1]) / 3600];
@@ -318,27 +323,31 @@ function calcHours(file) {
     for (var i = 0; i < 7; i++) {
         groupEfficiencyByDay[i] = filter(combinedPointsDayEfficiency, i);
         groupByDay[i] = filter(combinedPointsDay, i);
-
     }
-
 
 
     for (var i = 0; i < 24; i++) {
         combinedSumHours[i] = [i, findSum(groupByHours[i]) / 3600];
         combinedAvg[i] = [i, findAvg(groupEfficiencyByHour[i])];
+        comboHours[i] = [i, combinedAvg[i][1], combinedSumHours[i][1]];
     }
     for (var i = 0; i < 7; i++) {
-        combinedSumDay[i]= [i, findSum(groupByDay[i]) / 3600];
+        combinedSumDay[i] = [i, findSum(groupByDay[i]) / 3600];
         combinedAvgDay[i] = [i, findAvg(groupEfficiencyByDay[i])];
+        comboDay[i] = [i, combinedAvgDay[i][1], combinedSumDay[i][1]];
     }
+    console.log(comboHours);
 
 
     //second parameter is false because first row is headers, not data.
-
     var avgData = google.visualization.arrayToDataTable(combinedAvg, true);
+    //var hoursData = google.visualization.arrayToDataTable(combinedSumHours, true);
+    var comboHoursData = google.visualization.arrayToDataTable(comboHours, true);
+
     var avgDayData = google.visualization.arrayToDataTable(combinedAvgDay, true);
-    var hoursData = google.visualization.arrayToDataTable(combinedSumHours, true);
-    var dayData = google.visualization.arrayToDataTable(combinedSumDay, true);
+    //var dayData = google.visualization.arrayToDataTable(combinedSumDay, true);
+    var comboDayData = google.visualization.arrayToDataTable(comboDay, true);
+
 
     var avgOptions = {
         title: 'Your average productivity by hour during the day',
@@ -346,10 +355,13 @@ function calcHours(file) {
         'theme': 'material',
         curveType: 'function',
         hAxis: {
+
             title: 'Hour',
             gridlines: {
                 count: 24
-            }
+            },
+            showTextEvery: 1
+
         },
         vAxis: {
             title: 'Productivity',
@@ -367,35 +379,59 @@ function calcHours(file) {
             trigger: 'selection'
         }
     };
-    var hoursOptions = {
-        chart: {
-            title: 'Total hours spent by hour'
-        },
-        'theme': 'material',
+    //var hoursOptions = {
+    //    chart: {
+    //        title: 'Total hours spent by hour'
+    //    },
+    //    'theme': 'material',
+    //    colors:['#DB4437'],
+    //    hAxis: {
+    //        title: 'Hours',
+    //        gridlines: {
+    //            count: 24
+    //        }
+    //
+    //    },
+    //    legend: {
+    //        position: 'none'
+    //    },
+    //    vAxis: {
+    //        title: 'Minutes logged'
+    //    }
+    //};
 
+    var comboHourOptions = {
+        title: 'Total Time vs Productivity',
+        'theme': 'material',
+        'height': 300,
+        // multiple axis (you can have different labels, colors, etc.)
+        vAxes: [
+            {title: "Total Time", textStyle: {color: "red"}},
+            {title: "Productivity", textStyle: {color: "blue"}}
+        ],
         hAxis: {
-            title: 'Hours',
-            gridlines: {
+            title: "Hour of day", gridlines: {
                 count: 24
             }
-
         },
-        legend: {
-            position: 'none'
-        },
-        vAxis: {
-            title: 'Minutes logged'
-        }
+        seriesType: "bars",
+        // 1st series on axis 0 (by default), 2nd series on axis 1
+        series: {0: {type: "line", targetAxisIndex: 1, curveType: 'function'}}
     };
     var avgDayOptions = {
         chart: {
             title: 'productivity by day of week',
             subtitle: '0=Sunday, 6=Saturday'
         },
+        'height': 600,
         curveType: 'function',
         'theme': 'material',
         hAxis: {
             title: 'Days',
+            ticks: [{v: 0, f: 'Sunday'}, {v: 1, f: 'Monday'}, {v: 2, f: 'Tuesday'}, {v: 3, f: 'Wednesday'}, {
+                v: 4,
+                f: 'Thursday'
+            }, {v: 5, f: 'Friday'}, {v: 6, f: 'Saturday'}],
             gridlines: {
                 count: 7
             }
@@ -408,40 +444,65 @@ function calcHours(file) {
             title: 'Productivity logged'
         }
     };
-    var dayOptions = {
-        chart: {
-            title: 'Total hours spent by hour'
-        },
+    //var dayOptions = {
+    //    chart: {
+    //        title: 'Total hours spent by hour'
+    //    },
+    //    'theme': 'material',
+    //    colors: ['#DB4437'],
+    //    hAxis: {
+    //        title: 'Hours',
+    //        gridlines: {
+    //            count: 24
+    //        }
+    //
+    //    },
+    //    legend: {
+    //        position: 'none'
+    //    },
+    //    vAxis: {
+    //        title: 'Minutes logged'
+    //    }
+    //};
+    var comboDayOptions = {
+        title: 'Total Time vs Productivity',
+        'height': 300,
         'theme': 'material',
-
+        // multiple axis (you can have different labels, colors, etc.)
+        vAxes: [
+            {title: "Total Time", textStyle: {color: "red"}},
+            {title: "Productivity", textStyle: {color: "blue"}}
+        ],
         hAxis: {
-            title: 'Hours',
-            gridlines: {
-                count: 24
-            }
-
+            title: "Day of week",
+            ticks: [{v: 0, f: 'Sunday'}, {v: 1, f: 'Monday'}, {v: 2, f: 'Tuesday'}, {v: 3, f: 'Wednesday'}, {
+                v: 4,
+                f: 'Thursday'
+            }, {v: 5, f: 'Friday'}, {v: 6, f: 'Saturday'}],
         },
-        legend: {
-            position: 'none'
-        },
-        vAxis: {
-            title: 'Minutes logged'
-        }
+        seriesType: "bars",
+        // 1st series on axis 0 (by default), 2nd series on axis 1
+        series: {0: {type: "line", targetAxisIndex: 1, curveType: 'function'}}
     };
     var avgChart = new google.visualization.LineChart(document.getElementById('avg_hour_graph'));
-    var hoursChart = new google.visualization.ColumnChart(document.getElementById('sum_hour_graph'));
+    //var hoursChart = new google.visualization.ColumnChart(document.getElementById('sum_hour_graph'));
+    var comboHoursChart = new google.visualization.ComboChart(document.getElementById('combo_hour_graph'));
 
 
-    var avgDayChart  = new google.visualization.LineChart(document.getElementById('avg_day_graph'));
-    var daysChart = new google.visualization.ColumnChart(document.getElementById('sum_day_graph'));
+    var avgDayChart = new google.visualization.LineChart(document.getElementById('avg_day_graph'));
+    //var daysChart = new google.visualization.ColumnChart(document.getElementById('sum_day_graph'));
+    var comboDayChart = new google.visualization.ComboChart(document.getElementById('combo_day_graph'));
 
 
     $(".spinner").hide();
     avgChart.draw(avgData, avgOptions);
-    hoursChart.draw(hoursData, hoursOptions);
+    //hoursChart.draw(hoursData, hoursOptions);
+    comboHoursChart.draw(comboHoursData, comboHourOptions);
 
     avgDayChart.draw(avgDayData, avgDayOptions);
-    daysChart.draw(dayData, dayOptions);
+    //daysChart.draw(dayData, dayOptions);
+    comboDayChart.draw(comboDayData, comboDayOptions);
+
 
 }
 
