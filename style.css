@@ -25,6 +25,10 @@
     animation: rotateplane 1.2s infinite ease-in-out;
 }
 
+blockquote{
+    z-index: 10;
+}
+
 .input-group {
     float: left;
     margin-right: 20px;

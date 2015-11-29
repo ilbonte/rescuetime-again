@@ -37,7 +37,7 @@
                 <label><a href="https://www.rescuetime.com/anapi/manage" target="_blank">Choose your API Key</a>
                 </label>
                 <input type="text" class="form-control" id="api_key" placeholder="Enter API key"
-                       value="B63ZDoTfhcZit7t76wEuSKnKrTOe_IO7BF3OgmRo">
+                       value="">
 
                 <div class="input-daterange input-group" id="datepicker">
                     <span class="input-group-addon">from</span>
@@ -86,19 +86,29 @@
     </div>
     <div class="row chart">
         <div class="col-sm-12">
+            <blockquote class="col-sm-offset-1 col-sm-10">
+                <p>This chart shows your productivity during the select range. Productivity is calculated with this
+                    formula: <br>(Time*RescueTime's Productivity Score)/3600. <br>This means that if you do 60 minutes with
+                    100 as Productivity Score your productivity will be 100 too, but if you do only 30 minutes with 100
+                    Productivity Score your productivity will be 50! <br> You can think at blue line as the thing you got done.
+                    <br> If show dates is checked instead of points you will be able to see date and time for individual
+                    dots but the trend line may not be available.</p>
+            </blockquote>
             <!--<h2>Productivity for the selected range</h2>-->
 
             <div class="input-group">
 
                 <span class="input-group-addon">Trendline degree (linear-50)</span>
                 <input type="number" id="numberSpinner" min="1" max="50" class="form-control"
-                       value="20"/> <span class="input-group-btn" onClick="updateProdTrend()">
+                       value="20"/> <span class="input-group-btn" onClick="updateProd()">
         <button class="btn btn-default" type="button">Go!</button>
       </span>
 
             </div>
             <label class="checkbox-inline"><input type="checkbox" id="showDates">Show dates on x-axis (no trend line
                 available)</label>
+            <br>
+            <br>
 
             <div id="efficiency_graph"></div>
 
@@ -106,7 +116,13 @@
     </div>
     <div class="row chart">
         <div class="col-sm-12">
+            <blockquote class="col-sm-offset-1 col-sm-10">
+                <p>This chart shows your average productivity during a day. To calculate the points the productivity as
+                    been grouped by hour and then averaged. For the productivity is used the same formula as above.</p>
+            </blockquote>
+            <br>
             <!--<h2>Your average pro through the day</h2>-->
+
 
             <div id="avg_hour_graph"></div>
         </div>
@@ -115,7 +131,12 @@
     <div class="row chart">
         <div class="col-sm-12">
             <!--<h2>Total minutes for hour</h2>-->
-
+            <blockquote class="col-sm-offset-1 col-sm-10">
+                <p>This chart shows your average productivity and the total time spent for each hour in the selected period. If there is a big gap between the line and the chart this means that for that specific point your RescueTime's productivity pulse where high</p>
+            </blockquote>
+            <br>
+            <br>
+            <br>
             <div id="combo_hour_graph"></div>
         </div>
     </div>
@@ -123,6 +144,11 @@
 
     <div class="row chart">
         <div class="col-sm-12">
+            <br>
+            <blockquote class="col-sm-offset-1 col-sm-10">
+                <p>These charts are the same as the two above but are gruped by days of week instead of by hour</p>
+            </blockquote>
+
             <!--<h2>Your average pro through the day</h2>-->
 
             <div id="avg_day_graph"></div>
@@ -141,6 +167,9 @@
     <div class="row chart">
         <div class="col-sm-12">
             <h2>Top 50 activities </h2>
+            <blockquote class="col-sm-offset-1 col-sm-10">
+                <p>This chart simply show your top activities for the select range bar's color is based on RescueTime's colors.</p>
+            </blockquote>
 
             <h2 id="act-display"></h2>
 

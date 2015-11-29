@@ -104,7 +104,7 @@ var activityUploaded;
         updateTopAct();
     });
     $("#showDates").on("click", function () {
-        init();
+        updateProd();
     });
     document.getElementById('fileEfficency').addEventListener('change', onChangeEfficency);
     document.getElementById('fileActivity').addEventListener('change', onChangeActivity);
@@ -265,7 +265,7 @@ function calcEfficiency(file) {
     chart.draw(data, options);
 }
 
-function updateProdTrend() {
+function updateProd() {
     if (efficencyUploaded != null && usingFiles)
         calcEfficiency(efficencyUploaded);
     if (!usingFiles)
@@ -479,6 +479,7 @@ function filter(arr, cond) {
 function findAvg(arr) {
 
     avg = findSum(arr) / arr.length;
+    //TODO: maybe is better use the time instead of the number of the points gathered
     return avg;
 }
 
@@ -622,3 +623,4 @@ function updateTopAct() {
 
 //TODO: salva mega report as jpg/png... come una spece di screenshot di tutta la pagina
 //TODO: pie chart per le activities?
+//TODO: controllo se c'è l'apikey quando si elabora
