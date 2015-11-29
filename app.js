@@ -158,7 +158,7 @@ function getEfficiencyData() {
         failCount++;
         if (failCount < 3) {
             console.log("failed in getEfficiencyData");
-            init();
+            setTimeout(init(), failCount * 100);
         } else console.log("Failed 3 times attempting to: getJSON!");
     });
 }
@@ -177,7 +177,7 @@ function getActivityData() {
         failCount++;
         if (failCount < 3) {
             console.log("failed in getEfficiencyData");
-            init();
+            setTimeout(init(), failCount * 100);
         } else console.log("Failed 3 times attempting to: getJSON!");
     });
 }
@@ -379,26 +379,7 @@ function calcHours(file) {
             trigger: 'selection'
         }
     };
-    //var hoursOptions = {
-    //    chart: {
-    //        title: 'Total hours spent by hour'
-    //    },
-    //    'theme': 'material',
-    //    colors:['#DB4437'],
-    //    hAxis: {
-    //        title: 'Hours',
-    //        gridlines: {
-    //            count: 24
-    //        }
-    //
-    //    },
-    //    legend: {
-    //        position: 'none'
-    //    },
-    //    vAxis: {
-    //        title: 'Minutes logged'
-    //    }
-    //};
+
 
     var comboHourOptions = {
         title: 'Total Time vs Productivity',
@@ -444,26 +425,7 @@ function calcHours(file) {
             title: 'Productivity logged'
         }
     };
-    //var dayOptions = {
-    //    chart: {
-    //        title: 'Total hours spent by hour'
-    //    },
-    //    'theme': 'material',
-    //    colors: ['#DB4437'],
-    //    hAxis: {
-    //        title: 'Hours',
-    //        gridlines: {
-    //            count: 24
-    //        }
-    //
-    //    },
-    //    legend: {
-    //        position: 'none'
-    //    },
-    //    vAxis: {
-    //        title: 'Minutes logged'
-    //    }
-    //};
+
     var comboDayOptions = {
         title: 'Total Time vs Productivity',
         'height': 300,
@@ -515,12 +477,7 @@ function filter(arr, cond) {
 
 
 function findAvg(arr) {
-    /* var length = arr.length;
-     var avg;
-     var sum = 0;
-     for (var i = 0; i < length; i++) {
-     sum += arr[i][1];
-     }*/
+
     avg = findSum(arr) / arr.length;
     return avg;
 }
