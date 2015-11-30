@@ -73,17 +73,22 @@ $(".chart").hide();
  * Is called when the user choose to retrieve the data via HTTP request
  * */
 function init() {
-    usingFiles = false;
-    $("#downloadSection").empty();
-    $(".spinner").show();
-    $(".chart").show();
     key = document.getElementById('api_key').value;
     rb = document.getElementById('from').value;
     re = document.getElementById('to').value;
-    urlForEfficiency();
-    getEfficiencyData();
-    urlForActivity();
-    getActivityData();
+    if (key.length > 5) {
+        usingFiles = false;
+        $("#downloadSection").empty();
+        $(".spinner").show();
+        $(".chart").show();
+
+        urlForEfficiency();
+        getEfficiencyData();
+        urlForActivity();
+        getActivityData();
+    }
+    else
+        alert("Please insert your api key");
 }
 
 /**
@@ -110,10 +115,10 @@ function urlForActivity() {
  */
 
 function getEfficiencyData() {
-
+    //bypassing Access-Control-Allow-Origin stuff
     $.getJSON('http://allow-any-origin.appspot.com/' + efficiencyUrl, function (data) {
         if (typeof data.rows === 'undefined') {
-            console.log("undefined: maybe invalid parameters!?");
+            alert("Oh no! Something has gone wrong! Is your apikey valid? ");
         } else {
             calcEfficiency(data);
             calcHours(data);
@@ -128,7 +133,7 @@ function getEfficiencyData() {
         if (failCount < 3) {
             console.log("failed in getEfficiencyData");
             setTimeout(init(), failCount * 100);
-        } else console.log("Failed 3 times attempting to: getJSON!");
+        } else console.log("Failed 3 times attempting to: getEfficiencyData!");
     });
 }
 
@@ -139,7 +144,7 @@ function getEfficiencyData() {
 function getActivityData() {
     $.getJSON('http://allow-any-origin.appspot.com/' + activityUrl, function (data) {
         if (typeof data.rows === 'undefined') {
-            console.log("undefined: maybe invalid parameters!?");
+            alert("Oh no! Something has gone wrong! Is your apikey valid? ");
         } else {
             calcActivity(data);
             if (document.getElementById('download').checked) {
@@ -151,7 +156,7 @@ function getActivityData() {
         if (failCount < 3) {
             console.log("failed in getEfficiencyData");
             setTimeout(init(), failCount * 100);
-        } else console.log("Failed 3 times attempting to: getJSON!");
+        } else console.log("Failed 3 times attempting to: getActivityData!");
     });
 }
 
