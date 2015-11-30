@@ -21,32 +21,60 @@
  * datePickerOptions()
  * */
 
-
+/**
+ * NOTE: below I'm using efficiency and productivity as synonymous
+ * See here for full reference: https://www.rescuetime.com/apidoc#analytic-api-reference
+ * 'key' is the user API KEY
+ * 'rb' Sets the start day for data batch
+ * 're' Sets the end day for data batch,
+ * 'pv' Perspective: rank: (default) Organized around a calculated value, usually a sum like time spent
+ *                   interval: Organized around calendar time.
+ * 'rk' Restrict kind:
+ *                    overview: sums statistics for all activities into their top level category
+ *                    category: sums statistics for all activities into their sub category
+ *                    activity: sums statistics for individual applications / web sites / activities
+ *                    productivity: productivity calculation
+ *                    efficiency: efficiency calculation (not applicable in "rank" perspective)
+ *                    document: sums statistics for individual documents and web pages
+ * 'rs' Resolution time: Default is "hour". In an interval report, the X axis unit. In other words, data is summarizd into chunks of this size. "minute" will return data grouped into five-minute buckets, which is the most granular view available.
+ *
+ * */
 var key = "",
     rb = "",
     re = "",
     pv = "",
     rk = "",
-    rs = "hour",
-    format = "json";
+    rs = "hour";
+
+//Urls the are constructed based on user choices
 var activityUrl = "",
     efficiencyUrl = "";
+//Number of fails when attempting to 'download' the JSON.
 var failCount = 0;
+//True if the user uploaded his own JSON
 var usingFiles = false;
-var topAct = 90;
-var degreeTrend = 20;
-var unit = 60;
-var unitText = "Minutes";
+
+var efficencyUploaded,
+    activityUploaded;
+//Are the parameters that are modified when the unit is changed in the dropdown menu for the activity chart
+var unit = 60,
+    unitText = "Minutes";
+
+
 google.charts.load('43', {
     'packages': ['corechart', 'table', 'gauge', 'controls', 'bar', 'line']
 });
+
+
 $(".spinner").hide();
 $(".chart").hide();
 
+/**
+ * Is called when the user choose to retrieve the data via HTTP request
+ * */
 function init() {
     usingFiles = false;
     $("#downloadSection").empty();
-
     $(".spinner").show();
     $(".chart").show();
     key = document.getElementById('api_key').value;
@@ -58,87 +86,28 @@ function init() {
     getActivityData();
 }
 
-
-function datePickerOptions() {
-
-    $('#datepicker').datepicker({
-        format: "yyyy-mm-dd",
-        clearBtn: true,
-        todayHighlight: true
-    });
-}
-
-
-var efficencyUploaded;
-var activityUploaded;
-(function () {
-
-    function onChangeEfficency(event) {
-        var reader = new FileReader();
-        reader.onload = onReaderLoadEfficency;
-        reader.readAsText(event.target.files[0]);
-
-    }
-
-    function onReaderLoadEfficency(event) {
-        efficencyUploaded = JSON.parse(event.target.result);
-
-    }
-
-    function onChangeActivity(event) {
-        var reader = new FileReader();
-        reader.onload = onReaderLoadActivity;
-        reader.readAsText(event.target.files[0]);
-
-    }
-
-    function onReaderLoadActivity(event) {
-        activityUploaded = JSON.parse(event.target.result);
-
-    }
-
-    $(".dropup li").on("click", function () {
-
-        unit = this.value;
-        unitText = $(this).text();
-        updateTopAct();
-    });
-    $("#showDates").on("click", function () {
-        updateProd();
-    });
-    document.getElementById('fileEfficency').addEventListener('change', onChangeEfficency);
-    document.getElementById('fileActivity').addEventListener('change', onChangeActivity);
-}());
-
-function checkFiles() {
-
-    $(".chart").show();
-    usingFiles = true;
-    $("#act-display").empty();
-    if (efficencyUploaded != null) {
-        calcEfficiency(efficencyUploaded);
-        calcHours(efficencyUploaded);
-    }
-    if (activityUploaded != null) {
-
-        calcActivity(activityUploaded);
-    }
-}
-
+/**
+ * Create the URL for the HTTP request with 'rk=efficiency'
+ * */
 function urlForEfficiency() {
-    pv = "interval"; // #do not change this
+    pv = "interval"; // do not change this
     rk = "efficiency";
     efficiencyUrl = "http://www.rescuetime.com/anapi/data?key=" + key + "&perspective=" + pv + "&restrict_kind=" + rk + "&interval=" + rs + "&restrict_begin=" + rb + "&restrict_end=" + re + "&format=json";
     console.log(efficiencyUrl);
 }
-
+/**
+ * Create the URL for the HTTP request with  'rk =activity'
+ * */
 function urlForActivity() {
-    pv = "rank"; // #do not change this
+    pv = "rank"; //do not change this
     rk = "activity";
     activityUrl = "http://www.rescuetime.com/anapi/data?key=" + key + "&perspective=" + pv + "&restrict_kind=" + rk + "&interval=" + rs + "&restrict_begin=" + rb + "&restrict_end=" + re + "&format=json";
     console.log(activityUrl);
 }
 
+/**
+ * Get the efficiency (aka productivity) data and starts the functions for creating the related charts
+ */
 
 function getEfficiencyData() {
 
@@ -163,6 +132,10 @@ function getEfficiencyData() {
     });
 }
 
+/**
+ * Get the data for creating the activities chart
+ */
+
 function getActivityData() {
     $.getJSON('http://allow-any-origin.appspot.com/' + activityUrl, function (data) {
         if (typeof data.rows === 'undefined') {
@@ -182,13 +155,19 @@ function getActivityData() {
     });
 }
 
+/**
+ * Create and start the download for the efficiency file
+ * */
+
 function downloadEfficiencyData(data) {
     var JSONString = JSON.stringify(data);
     var file = "text/json;charset=utf-8," + encodeURIComponent(JSONString);
     $('<a href="data:' + file + '" download="EfficiencyData' + rb + ' to ' + re + '.json" id="downEfficency">Download Efficiency Data</a> <br>').appendTo('#downloadSection');
     $('#downEfficency').get(0).click();
 }
-
+/**
+ * Create and start the download for the activities  file
+ * */
 function downloadActivityData(data) {
     var JSONString = JSON.stringify(data);
     var file = "text/json;charset=utf-8," + encodeURIComponent(JSONString);
@@ -196,13 +175,18 @@ function downloadActivityData(data) {
     $('#downEfficency').get(0).click();
 }
 
+/**
+ *Starting from a file (both uploaded or retrieved via HTTP) create the first chart.
+ */
+
 function calcEfficiency(file) {
+
     var Combined = [];
     Combined[0] = ['Hours', 'Productivity'];
-    //TODO: vedere sto bug
+    /**Get the degree of the trendline*/
+    var degreeTrend = parseInt(document.getElementById("numberSpinner").value);
+
     for (var i = 0; i < file.rows.length; i++) {
-//        Combined[i + 1] = [new Date(file.rows[i][0]), file.rows[i][4]]; OLD
-        //   Combined[i + 1] = [i, (file.rows[i][4] * file.rows[i][1]) / 3600]; //"normalized"
         if (document.getElementById("showDates").checked)
             Combined[i + 1] = [new Date(file.rows[i][0]), (file.rows[i][4] * file.rows[i][1]) / 3600]; //"normalized"
         else
@@ -210,8 +194,6 @@ function calcEfficiency(file) {
 
     }
 
-
-    degreeTrend = parseInt(document.getElementById("numberSpinner").value);
     //second parameter is false because first row is headers, not data.
     var data = google.visualization.arrayToDataTable(Combined, false);
     var options = {
@@ -265,35 +247,38 @@ function calcEfficiency(file) {
     chart.draw(data, options);
 }
 
+/**
+ * Reloads the first chart when the user change from points to Date or vice versa
+ * */
 function updateProd() {
     if (efficencyUploaded != null && usingFiles)
         calcEfficiency(efficencyUploaded);
     if (!usingFiles)
         getEfficiencyData();
-
 }
-
+/**
+ * Elaborate the data and create the graphs related to the productivity
+ * */
 function calcHours(file) {
 
+    var combinedPointsHourEfficiency = [],
+        combinedPointsHours = [],
+        comboHours = [];
 
-    var combinedPointsHourEfficiency = [];
-    var combinedPointsHours = [];
-    var comboHours = [];
+    var combinedPointsDayEfficiency = [],
+        combinedPointsDay = [],
+        comboDay = [];
 
-    var combinedPointsDayEfficiency = [];
-    var combinedPointsDay = [];
-    var comboDay = [];
-
-    var groupEfficiencyByHour = [];
-    var groupByHours = [];
-    var groupEfficiencyByDay = [];
-    var groupByDay = [];
+    var groupEfficiencyByHour = [],
+        groupByHours = [],
+        groupEfficiencyByDay = [],
+        groupByDay = [];
 
 
-    var combinedAvg = [];
-    var combinedAvgDay = [];
-    var combinedSumHours = [];
-    var combinedSumDay = [];
+    var combinedAvg = [],
+        combinedAvgDay = [],
+        combinedSumHours = [],
+        combinedSumDay = [];
 
 
     combinedPointsHourEfficiency[0] = ['Hour', 'Productivity'];
@@ -468,43 +453,48 @@ function calcHours(file) {
 
 }
 
-//This function groups the data for every hour in an array
+/**
+ * Extracts the selected value from the array
+ */
 function filter(arr, cond) {
     return arr.filter(function (element) {
         return element[0] === cond;
     });
 }
 
-
-function findAvg(arr) {
-
-    avg = findSum(arr) / arr.length;
-    //TODO: maybe is better use the time instead of the number of the points gathered
-    return avg;
-}
-
+/**
+ * Computes the sum of the time
+ */
 function findSum(arr) {
-
-
     var sum = 0;
     for (var i = 0; i < arr.length; i++) {
         sum += arr[i][1];
     }
     return sum;
 }
+/**
+ * Computes the average time
+ */
+function findAvg(arr) {
+    avg = findSum(arr) / arr.length;
+    //TODO: maybe is better use the time instead of the number of the points
+    return avg;
+}
 
+/**
+ * Create the chart for the activities
+ */
 function calcActivity(file) {
     $("#act-display").empty();
 
-    topAct = document.getElementById("numberSpinnerTop").value;
-    $()
+    var topAct = document.getElementById("numberSpinnerTop").value;
+
     var Combined = [];
     var color;
     Combined[0] = ['Results', unitText, {
         role: 'style'
     }];
-    // topAct = parseInt(document.getElementById("numberSpinnerTop"));
-    // TODO: fixthis
+
     for (var i = 0; i < topAct; i++) {
         switch (file.rows[i][5]) {
             case -2:
@@ -524,9 +514,7 @@ function calcActivity(file) {
                 break;
         }
         var tmp = file.rows[i][1];
-
-        var mins = tmp / unit;
-        Combined[i + 1] = [file.rows[i][3], mins, color];
+        Combined[i + 1] = [file.rows[i][3], tmp / unit, color];
     }
     groupByCategory(file);
     //second parameter is false because first row is headers, not data.
@@ -568,7 +556,9 @@ function calcActivity(file) {
     dashboard.draw(data);
 }
 
-
+/**
+ * Groups the time by category
+ */
 function groupByCategory(file) {
     var distracting = 0,
         neutral = 0,
@@ -587,7 +577,9 @@ function groupByCategory(file) {
     }
     printInfo(distracting, neutral, productive);
 }
-
+/**
+ * Prints summary text for the activities
+ * */
 function printInfo(distracting, neutral, productive) {
     var summaryText = $('#act-display');
 
@@ -596,7 +588,9 @@ function printInfo(distracting, neutral, productive) {
     summaryText.append("<h3> Total distracting time: " + distracting.toHHMMSS() + "<div style=' width: 18px; height: 18px;background: #C5392F;display: inline-block;'></div> + <div style='width: 18px; height: 18px; background: #92343B; display: inline-block;'></div></h3>");
 }
 
-
+/**
+ * Helper for translating from second to an human-readable format
+ * */
 Number.prototype.toHHMMSS = function () {
     var numdays = Math.floor(this / 86400);
 
@@ -610,10 +604,11 @@ Number.prototype.toHHMMSS = function () {
 
 };
 
-
+/**
+ * Reload the activities' chart
+ * */
 function updateTopAct() {
     if (activityUploaded != null && usingFiles) {
-        // $("#act-numberRangeFilter_chart_div > div").remove();
         calcActivity(activityUploaded);
     }
 
@@ -621,6 +616,69 @@ function updateTopAct() {
         getActivityData();
 }
 
+(function () {
+
+    function onChangeEfficency(event) {
+        var reader = new FileReader();
+        reader.onload = onReaderLoadEfficency;
+        reader.readAsText(event.target.files[0]);
+    }
+
+    function onReaderLoadEfficency(event) {
+        efficencyUploaded = JSON.parse(event.target.result);
+    }
+
+    function onChangeActivity(event) {
+        var reader = new FileReader();
+        reader.onload = onReaderLoadActivity;
+        reader.readAsText(event.target.files[0]);
+    }
+
+    function onReaderLoadActivity(event) {
+        activityUploaded = JSON.parse(event.target.result);
+    }
+
+    $(".dropup li").on("click", function () {
+        unit = this.value;
+        unitText = $(this).text();
+        updateTopAct();
+    });
+
+    $("#showDates").on("click", function () {
+        updateProd();
+    });
+
+    document.getElementById('fileEfficency').addEventListener('change', onChangeEfficency);
+    document.getElementById('fileActivity').addEventListener('change', onChangeActivity);
+}());
+
+
+/**
+ * Settings fot the date picker
+ * */
+function datePickerOptions() {
+    $('#datepicker').datepicker({
+        format: "yyyy-mm-dd",
+        clearBtn: true,
+        todayHighlight: true
+    });
+}
+/**
+ * Draw the chart if there are the required data
+ * */
+function checkFiles() {
+    $(".chart").show();
+    usingFiles = true;
+    $("#act-display").empty();
+    if (efficencyUploaded != null) {
+        calcEfficiency(efficencyUploaded);
+        calcHours(efficencyUploaded);
+    }
+    if (activityUploaded != null) {
+        calcActivity(activityUploaded);
+    }
+}
+
+
 //TODO: salva mega report as jpg/png... come una spece di screenshot di tutta la pagina
-//TODO: pie chart per le activities?
 //TODO: controllo se c'è l'apikey quando si elabora
