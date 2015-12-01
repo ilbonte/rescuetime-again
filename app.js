@@ -176,8 +176,8 @@ function downloadEfficiencyData(data) {
 function downloadActivityData(data) {
     var JSONString = JSON.stringify(data);
     var file = "text/json;charset=utf-8," + encodeURIComponent(JSONString);
-    $('<a href="data:' + file + '" download="ActivityData' + rb + ' to ' + re + '.json" id="downEfficency">Download Activity Data</a> <br>').appendTo('#downloadSection');
-    $('#downEfficency').get(0).click();
+    $('<a href="data:' + file + '" download="ActivityData' + rb + ' to ' + re + '.json" id="downActivity">Download Activity Data</a> <br>').appendTo('#downloadSection');
+    $('#downActivity').get(0).click();
 }
 
 /**
@@ -377,8 +377,11 @@ function calcHours(file) {
         'height': 300,
         // multiple axis (you can have different labels, colors, etc.)
         vAxes: [
-            {title: "Total Time", textStyle: {color: "red"}},
-            {title: "Productivity", textStyle: {color: "blue"}}
+            {title: "Total Time", textStyle: {color: "red"},
+                minValue: 0},
+            {title: "Productivity", textStyle: {color: "blue"},
+                minValue: 0}
+
         ],
         hAxis: {
             title: "Hour of day", gridlines: {
@@ -422,8 +425,10 @@ function calcHours(file) {
         'theme': 'material',
         // multiple axis (you can have different labels, colors, etc.)
         vAxes: [
-            {title: "Total Time", textStyle: {color: "red"}},
-            {title: "Productivity", textStyle: {color: "blue"}}
+            {title: "Total Time", textStyle: {color: "red"},
+                minValue: 0},
+            {title: "Productivity", textStyle: {color: "blue"},
+                minValue: 0}
         ],
         hAxis: {
             title: "Day of week",

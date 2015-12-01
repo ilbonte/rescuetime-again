@@ -21,7 +21,6 @@
 </head>
 
 <body>
-<button onclick="screenShot()">aaaaaa</button>
 <div class="container-fluid" id="screen">
     <div class="row row-centered">
         <div class="col-sm-8 col-centered">
@@ -30,10 +29,13 @@
                     <small>Cuz <a href="https://www.reddit.com/r/dataisbeautiful/top/?sort=top&t=month" target="_blank">data
                         are beautiful!</a></small>
                 </h1>
-                <h5>Psssst: you really should read the <a href="" TARGET="_blank">README</a> before using this tool!
+                <h5>Psssst: you really should read the <a href="https://github.com/ilbonte/rescuetime-again" TARGET="_blank">README</a> before using this tool!
                 </h5>
             </div>
         </div>
+    </div>
+    <div class="row">
+        <div class="spinner"></div>
     </div>
     <div class="row" id="controls">
         <div class="col-sm-6">
@@ -58,7 +60,7 @@
             <button type="button" class="btn btn-primary" onClick="init()">Elaborate</button>
             <div class="checkbox">
                 <label>
-                    <input type="checkbox" id="download"> Download JSON file for the selected range. <a href=""
+                    <input type="checkbox" id="download"> Download JSON file for the selected range. <a href="https://github.com/ilbonte/rescuetime-again#notes"
                                                                                                         target="_blank">Why?</a>
                 </label>
             </div>
@@ -68,10 +70,12 @@
         </div>
     </div>
     <div class="row">
-        <h2> ... OR upload your files</h2>
+        <div class="col-sm-12"><h2> OR upload your files</h2>
 
-        <H1>TODO:</H1>
-        <H6>What is this or don't know how to use it? Read <a href="">HERE</a></H6>
+            <h6>Go to the <a href="http://ilbonte.github.io/rescuetime-again/merge.html">merge page</a></h6>
+            <H6>What is this or don't know how to use it? Read <a
+                    href="https://github.com/ilbonte/rescuetime-again#notes">HERE</a></H6></div>
+
 
         <div class="col-sm-3">
             <h3>Activity</h3>
@@ -90,9 +94,7 @@
 
     </div>
 
-    <div class="row">
-        <div class="spinner"></div>
-    </div>
+
     <div class="row chart">
         <div class="col-sm-12">
             <blockquote class="col-sm-offset-1 col-sm-10">
@@ -144,7 +146,7 @@
             <!--<h2>Total minutes for hour</h2>-->
             <blockquote class="col-sm-offset-1 col-sm-10">
                 <p>This chart shows your average productivity and the total time spent for each hour in the selected
-                    period. If there is a big gap between the line and the chart this means that for that specific point
+                    period. If there is a big gap between the line and the bars this means that for that specific point
                     your RescueTime's productivity pulse where high</p>
             </blockquote>
             <br>
@@ -183,7 +185,7 @@
         <div class="col-sm-12">
             <h2>Top 50 activities </h2>
             <blockquote class="col-sm-offset-1 col-sm-10">
-                <p>This chart simply show your top activities for the select range bar's color is based on RescueTime's
+                <p>This chart simply show your top activities for the select range. Bar's color is based on RescueTime's
                     colors.</p>
             </blockquote>
 
