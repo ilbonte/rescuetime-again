@@ -16,10 +16,13 @@
     <script type="text/javascript" src="https://www.google.com/jsapi"></script>
     <script type="text/javascript"
             src="https://www.gstatic.com/charts/loader.js"></script>
+    <script src="https://github.com/niklasvh/html2canvas/releases/download/0.5.0-alpha1/html2canvas.js"></script>
+
 </head>
 
 <body>
-<div class="container-fluid">
+<button onclick="screenShot()">aaaaaa</button>
+<div class="container-fluid" id="screen">
     <div class="row row-centered">
         <div class="col-sm-8 col-centered">
             <div class="page-header">
@@ -27,7 +30,8 @@
                     <small>Cuz <a href="https://www.reddit.com/r/dataisbeautiful/top/?sort=top&t=month" target="_blank">data
                         are beautiful!</a></small>
                 </h1>
-                <h5>Psssst: you really should read the <a href="" TARGET="_blank">README</a> before using this tool!</h5>
+                <h5>Psssst: you really should read the <a href="" TARGET="_blank">README</a> before using this tool!
+                </h5>
             </div>
         </div>
     </div>
@@ -54,7 +58,8 @@
             <button type="button" class="btn btn-primary" onClick="init()">Elaborate</button>
             <div class="checkbox">
                 <label>
-                    <input type="checkbox" id="download"> Download JSON file for the selected range. <a href="" target="_blank">Why?</a>
+                    <input type="checkbox" id="download"> Download JSON file for the selected range. <a href=""
+                                                                                                        target="_blank">Why?</a>
                 </label>
             </div>
         </div>
@@ -64,8 +69,10 @@
     </div>
     <div class="row">
         <h2> ... OR upload your files</h2>
+
         <H1>TODO:</H1>
         <H6>What is this or don't know how to use it? Read <a href="">HERE</a></H6>
+
         <div class="col-sm-3">
             <h3>Activity</h3>
             <input id="fileActivity" type="file"/>
@@ -90,9 +97,11 @@
         <div class="col-sm-12">
             <blockquote class="col-sm-offset-1 col-sm-10">
                 <p>This chart shows your productivity during the select range. Productivity is calculated with this
-                    formula: <br>(Time*RescueTime's Productivity Score)/3600. <br>This means that if you do 60 minutes with
+                    formula: <br>(Time*RescueTime's Productivity Score)/3600. <br>This means that if you do 60 minutes
+                    with
                     100 as Productivity Score your productivity will be 100 too, but if you do only 30 minutes with 100
-                    Productivity Score your productivity will be 50! <br> You can think at blue line as the thing you got done.
+                    Productivity Score your productivity will be 50! <br> You can think at blue line as the thing you
+                    got done.
                     <br> If show dates is checked instead of points you will be able to see date and time for individual
                     dots but the trend line may not be available.</p>
             </blockquote>
@@ -134,11 +143,14 @@
         <div class="col-sm-12">
             <!--<h2>Total minutes for hour</h2>-->
             <blockquote class="col-sm-offset-1 col-sm-10">
-                <p>This chart shows your average productivity and the total time spent for each hour in the selected period. If there is a big gap between the line and the chart this means that for that specific point your RescueTime's productivity pulse where high</p>
+                <p>This chart shows your average productivity and the total time spent for each hour in the selected
+                    period. If there is a big gap between the line and the chart this means that for that specific point
+                    your RescueTime's productivity pulse where high</p>
             </blockquote>
             <br>
             <br>
             <br>
+
             <div id="combo_hour_graph"></div>
         </div>
     </div>
@@ -167,10 +179,12 @@
     </div>
 
     <div class="row chart">
+
         <div class="col-sm-12">
             <h2>Top 50 activities </h2>
             <blockquote class="col-sm-offset-1 col-sm-10">
-                <p>This chart simply show your top activities for the select range bar's color is based on RescueTime's colors.</p>
+                <p>This chart simply show your top activities for the select range bar's color is based on RescueTime's
+                    colors.</p>
             </blockquote>
 
             <h2 id="act-display"></h2>
@@ -203,6 +217,12 @@
                 <div id="act-numberRangeFilter_chart_div"></div>
             </div>
         </div>
+    </div>
+    <div class="row chart">
+        <div class="col-sm-offset-4 col-sm-4"><br>
+            <button type="button" class="btn btn-primary" onClick="screenShot()">Download as image (alpha)</button>
+        </div>
+
     </div>
 </div>
 

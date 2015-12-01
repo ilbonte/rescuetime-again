@@ -430,7 +430,7 @@ function calcHours(file) {
             ticks: [{v: 0, f: 'Sunday'}, {v: 1, f: 'Monday'}, {v: 2, f: 'Tuesday'}, {v: 3, f: 'Wednesday'}, {
                 v: 4,
                 f: 'Thursday'
-            }, {v: 5, f: 'Friday'}, {v: 6, f: 'Saturday'}],
+            }, {v: 5, f: 'Friday'}, {v: 6, f: 'Saturday'}]
         },
         seriesType: "bars",
         // 1st series on axis 0 (by default), 2nd series on axis 1
@@ -454,8 +454,6 @@ function calcHours(file) {
     avgDayChart.draw(avgDayData, avgDayOptions);
     //daysChart.draw(dayData, dayOptions);
     comboDayChart.draw(comboDayData, comboDayOptions);
-
-
 }
 
 /**
@@ -559,6 +557,7 @@ function calcActivity(file) {
     });
     dashboard.bind(control, chart);
     dashboard.draw(data);
+
 }
 
 /**
@@ -684,6 +683,15 @@ function checkFiles() {
     }
 }
 
+function screenShot() {
+    html2canvas(document.getElementById('screen'), {
+        onrendered: function (canvas) {
+            var myImage = canvas.toDataURL("image/png");
+            window.open(myImage);
+        }
+    });
+}
 
-//TODO: salva mega report as jpg/png... come una spece di screenshot di tutta la pagina
-//TODO: controllo se c'è l'apikey quando si elabora
+
+
+
