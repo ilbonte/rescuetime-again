@@ -10,8 +10,6 @@ Unfortunately the free version doesn't have such in-depth analysis as I like so 
 3.  ????
 4.  PROFIT!
 
-[Example output with 11 months of data](http://i.imgur.com/h1PElrI.png)
-
 ## Notes
 
 RescueTime's free plan allows you to see only the last tree month of data, so if you don't own a premium account be sure to select a period of time within 3 month from now.
@@ -29,4 +27,9 @@ Since I have the free plan, but I wanted to save my data so I could analyze it l
 - [ ] Comparison page
 - [ ] Smart merge page: before merging check if the files are uploaded in chronological order
 - [ ] Whatever you want
+
+
+### Example
+[Example output with 11 months of data](http://i.imgur.com/h1PElrI.png)
+![alt tag](http://i.imgur.com/h1PElrI.png)
 
