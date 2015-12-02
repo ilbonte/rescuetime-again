@@ -26,6 +26,7 @@ Since I have the free plan, but I wanted to save my data so I could analyze it l
 - [ ] Allow multiple select in the merge page
 - [ ] Comparison page
 - [ ] Smart merge page: before merging check if the files are uploaded in chronological order
+- [ ] Improve annotations
 - [ ] Whatever you want
 
 
