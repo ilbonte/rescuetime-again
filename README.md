@@ -1,6 +1,6 @@
 # Why
 
-[RescueTime](www.rescuetime.com) is a fantastic tool for time management and I use it mainly to understand my daily habits so I can be more productive.
+[RescueTime](https://www.rescuetime.com) is a fantastic tool for time management and I use it mainly to understand my daily habits so I can be more productive.
 Unfortunately the free version doesn't have such in-depth analysis as I like so built my own charts using their API to access the data
 
 # Usage
