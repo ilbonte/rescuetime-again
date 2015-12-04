@@ -97,7 +97,7 @@ function init() {
 function urlForEfficiency() {
     pv = "interval"; // do not change this
     rk = "efficiency";
-    efficiencyUrl = "http://www.rescuetime.com/anapi/data?key=" + key + "&perspective=" + pv + "&restrict_kind=" + rk + "&interval=" + rs + "&restrict_begin=" + rb + "&restrict_end=" + re + "&format=json";
+    efficiencyUrl = "https://www.rescuetime.com/anapi/data?key=" + key + "&perspective=" + pv + "&restrict_kind=" + rk + "&interval=" + rs + "&restrict_begin=" + rb + "&restrict_end=" + re + "&format=json";
     console.log(efficiencyUrl);
 }
 /**
@@ -106,7 +106,7 @@ function urlForEfficiency() {
 function urlForActivity() {
     pv = "rank"; //do not change this
     rk = "activity";
-    activityUrl = "http://www.rescuetime.com/anapi/data?key=" + key + "&perspective=" + pv + "&restrict_kind=" + rk + "&interval=" + rs + "&restrict_begin=" + rb + "&restrict_end=" + re + "&format=json";
+    activityUrl = "https://www.rescuetime.com/anapi/data?key=" + key + "&perspective=" + pv + "&restrict_kind=" + rk + "&interval=" + rs + "&restrict_begin=" + rb + "&restrict_end=" + re + "&format=json";
     console.log(activityUrl);
 }
 
@@ -696,7 +696,3 @@ function screenShot() {
         }
     });
 }
-
-
-
-
