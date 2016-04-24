@@ -18,6 +18,7 @@ var queries = {
 
 
 $("document").ready(function() {
+
     $('#fileEfficency').on('change', fileUploaded);
     $('#fileActivity').on('change', fileUploaded);
 
@@ -80,11 +81,14 @@ function getData(params) {
                 rawActivityData = data.rows;
 
             }
+            if (document.getElementById('download').checked) {
+                startDownload(data, params.restrict_kind);
+            }
             $('.spinner').hide();
         }).fail(function(jqxhr, textStatus, error) {
             failCount++;
             if (failCount < 3) {
-                console.log('Fail number'+failCount);
+                console.log('Fail number' + failCount);
                 setTimeout(getData(params), failCount * 300);
             } else console.log('Failed 3 times attempting to retrive data!');
             // jqxhr.status
@@ -126,6 +130,14 @@ function fileUploaded(event) {
 }
 
 
+function startDownload(data, type) {
+
+    var JSONString = JSON.stringify(data);
+    var file = "text/json;charset=utf-8," + encodeURIComponent(JSONString);
+    $('<a href="data:' + file + '" download="' + type + '+' + document.getElementById('from').value + ' to ' + document.getElementById('to').value + '.json" id="download' + type + '">Download ' + type + ' Data</a> <br>').appendTo('#downloadSection');
+    $('#download' + type).get(0).click();
+}
+
 
 /***********
  *****VIEW*****
@@ -139,6 +151,9 @@ function fullEfficiencyGraph(data) {
 
     });
     $('#efficiency_graph').highcharts('StockChart', {
+        chart: {
+            height: Math.max(window.innerHeight - 100, 350)
+        },
         rangeSelector: {
             buttons: [{
                 type: 'day',
