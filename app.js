@@ -1,10 +1,12 @@
 //----------DEFAULT VARIABLES----------
 
-//True if the user uploaded his own JSON
-var usingFiles = false;
-var failCount = 0;
-var rawActivityData;
-var rawEfficencyData;
+
+var usingFiles = false; //True if the user uploaded his own JSON
+var failCount = 0; //Counts how many times getData tries the request if there is a failure
+var rawEfficencyData; //contains the efficiency's data (first 3 chart)
+var rawActivityData; //contains the activities's data  (last chart)
+
+//objects that will be used for the requests with default values
 var queries = {
     activities: {
         perspective: 'rank',
@@ -18,39 +20,41 @@ var queries = {
 
 
 $("document").ready(function() {
-
     $('#fileEfficency').on('change', fileUploaded);
     $('#fileActivity').on('change', fileUploaded);
 
-    $('#numberSpinner').on('change', function(event) {
-        console.log(event.target.value);
-        fullEfficiencyGraph(rawEfficencyData);
+    //redraw the efficiency chart when the value change
+    $('#trendLineSpinner').on('change', function(event) {
+        fullEfficiencyChart(rawEfficencyData);
     });
 
-    $('#numberSpinnerTop').on('change', function(event) {
-        console.log(event.target.value);
+    $('#activitiesNumberSpinner').on('change', function(event) {
         activityChart(rawActivityData);
     });
 
 });
 
+
 function init() {
     var key = document.getElementById('api_key').value;
     if (key.length > 5) {
         usingFiles = false;
+
         queries.efficiency.key = queries.activities.key = key;
         queries.efficiency.restrict_begin = queries.activities.restrict_begin = document.getElementById('from').value;
         queries.efficiency.restrict_end = queries.activities.restrict_end = document.getElementById('to').value;
         queries.efficiency.interval = queries.activities.interval = 'hour';
         queries.efficiency.format = queries.activities.format = 'json';
-        $('#downloadSection').empty();
-        $('.spinner').show();
-        $('.chart').show();
+
         //activities data
         getData(queries.activities);
 
         //efficiency data
         getData(queries.efficiency);
+
+        $('#downloadSection').empty();
+        $('.spinner').show();
+        $('.chart').show();
 
     } else {
         alert('Please insert your api key');
@@ -73,24 +77,27 @@ function getData(params) {
                 alert(data.messages);
             }
             if (params.restrict_kind === 'efficiency') {
-                fullEfficiencyGraph(data.rows);
-                combinedGraphs(data.rows);
+                fullEfficiencyChart(data.rows);
+                combinedCharts(data.rows);
                 rawEfficencyData = data.rows;
             } else if (params.restrict_kind === 'activity') {
                 activityChart(data.rows);
                 rawActivityData = data.rows;
-
             }
+
             if (document.getElementById('download').checked) {
                 startDownload(data, params.restrict_kind);
             }
+
             $('.spinner').hide();
         }).fail(function(jqxhr, textStatus, error) {
             failCount++;
             if (failCount < 3) {
-                console.log('Fail number' + failCount);
                 setTimeout(getData(params), failCount * 300);
-            } else console.log('Failed 3 times attempting to retrive data!');
+            } else {
+                var modal = $('<div class="modal fade bs-modal-sm" tabindex="-1" role="dialog"> <div class="modal-dialog modal-sm"> <div class="modal-content">Error retriving your data. Please try again later. If you keep getting this error please open an issue on GitHub or send an email to davide.bonte@gmail.com </div></div></div>');
+                modal.modal('show');
+            }
             // jqxhr.status
             //TODO: add retry for 403 over quota?
             var err = textStatus + ', ' + error;
@@ -105,8 +112,8 @@ function checkFiles() {
     $("#act-display").empty();
     // TODO: add check per vedere se ho effetivamente caricato dei file e vedere se sono validi
     if (rawEfficencyData) {
-        fullEfficiencyGraph(rawEfficencyData);
-        combinedGraphs(rawEfficencyData);
+        fullEfficiencyChart(rawEfficencyData);
+        combinedCharts(rawEfficencyData);
     }
     if (rawActivityData) {
         activityChart(rawActivityData);
@@ -126,12 +133,10 @@ function fileUploaded(event) {
     };
 
     reader.readAsText(file);
-
 }
 
-
+//add and automatically start the download for the files
 function startDownload(data, type) {
-
     var JSONString = JSON.stringify(data);
     var file = "text/json;charset=utf-8," + encodeURIComponent(JSONString);
     $('<a href="data:' + file + '" download="' + type + '+' + document.getElementById('from').value + ' to ' + document.getElementById('to').value + '.json" id="download' + type + '">Download ' + type + ' Data</a> <br>').appendTo('#downloadSection');
@@ -139,18 +144,19 @@ function startDownload(data, type) {
 }
 
 
-/***********
- *****VIEW*****
- ***********/
+/***************
+ *****CHARTS****
+ ***************/
 
-function fullEfficiencyGraph(data) {
+function fullEfficiencyChart(data) {
     var normalizedData = [];
     data.forEach(function(point) {
         normalizedData.push([new Date(point[0]).getTime(), (point[4] * point[1]) / 3600]);
         // normalizedData.push([new Date(point[0]).getTime(), point[4]]);
-
     });
-    $('#efficiency_graph').highcharts('StockChart', {
+
+
+    $('#efficiency_chart').highcharts('StockChart', {
         chart: {
             height: Math.max(window.innerHeight - 100, 350)
         },
@@ -197,7 +203,7 @@ function fullEfficiencyGraph(data) {
             regressionSettings: {
                 type: 'loess',
                 color: '#1111cc',
-                loessSmooth: parseInt(document.getElementById("numberSpinner").value)
+                loessSmooth: parseInt(document.getElementById("trendLineSpinner").value)
 
             },
         }]
@@ -206,6 +212,30 @@ function fullEfficiencyGraph(data) {
 
 }
 
+
+function combinedCharts(data) {
+    var hours = initializeArray(24);
+    var days = initializeArray(7);
+    var hour = 0;
+    var day = 0;
+    data.forEach(function(element) {
+        hour = parseInt(element[0].substr(11, 2)); //note: I can't use Date() because rescuetime log the date based on user's system time which is in GMT but when using Date() on the string in the JSON is converted in UTC :(
+        day = new Date(element[0].substr(0, 10)).getDay();
+
+        hours[hour].totalTime += element[1]; //sum of the total time for a given hour
+        hours[hour].totalEfficency += (element[4] * element[1]) / 3600; //normalize the data
+        hours[hour].count++; //how many entries for a given hour. Used to calculate the average efficency
+
+        days[day].totalTime += element[1];
+        days[day].totalEfficency += (element[4] * element[1]) / 3600;
+        days[day].count++;
+    });
+
+    displayCombined('#combo_hour_chart', calcAvg(hours));
+    displayCombined('#combo_day_chart', calcAvg(days));
+}
+
+//inizialize the array with the default object
 function initializeArray(length) {
     var array = [];
     for (var i = 0; i < length; i++) {
@@ -219,6 +249,7 @@ function initializeArray(length) {
     return array;
 }
 
+//calculate the average efficency for the given period (day or hour)
 function calcAvg(array) {
     array.forEach(function(element) {
         element.avgEfficency = element.totalEfficency / element.count;
@@ -226,33 +257,8 @@ function calcAvg(array) {
     return array;
 }
 
-function combinedGraphs(data) {
-    var hours = initializeArray(24);
-    var days = initializeArray(7);
-    var hour = 0;
-    var day = 0;
-    data.forEach(function(element) {
-        /*[Date,Time Spent (seconds), Number of People, Efficiency (-2:2), Efficiency (percent)]*/
-        hour = parseInt(element[0].substr(11, 2)); //note: I can't use Date() because rescuetime log the date based on user's system time which is in GMT but when using Date() on the string in the JSON is converted in UTC
-        day = new Date(element[0].substr(0, 10)).getDay();
-
-        hours[hour].totalTime += element[1];
-        hours[hour].totalEfficency += (element[4] * element[1]) / 3600;
-        hours[hour].count++;
-
-        days[day].totalTime += element[1];
-        days[day].totalEfficency += (element[4] * element[1]) / 3600;
-        days[day].count++;
-    });
-
-    hours = calcAvg(hours);
-    days = calcAvg(days);
-    displayCombined('#combo_hour_graph', hours);
-    displayCombined('#combo_day_graph', days);
-}
-
+//create the chart with total time and average efficency
 function displayCombined(DOMChart, data) {
-
     var totalTime = [];
     data.forEach(function(item) {
         totalTime.push(item.totalTime / 3600);
@@ -337,6 +343,7 @@ function displayCombined(DOMChart, data) {
     });
 }
 
+//chart with the total time
 function activityChart(data) {
     // ["Rank", "Time Spent (seconds)", "Number of People", "Activity", "Category", "Productivity"]
     var categories = {
@@ -363,6 +370,8 @@ function activityChart(data) {
     };
     var activityData = [];
     var totalSeconds = 0;
+
+    //colors the bars
     data.forEach(function(activity) {
         totalSeconds += activity[1];
         switch (activity[5]) {
@@ -409,22 +418,20 @@ function activityChart(data) {
         }
     });
 
-
-
     $('#act_chart').highcharts({
         chart: {
-            height: (document.getElementById("numberSpinnerTop").value * 20)
+            height: (document.getElementById("activitiesNumberSpinner").value * 20)
         },
-
         title: {
             text: 'Activities'
         },
         subtitle: {
-            text: 'Total time recorded (hh:mm:ss) :' + timeFormatter(totalSeconds)
+            text: '<strong>Total time recorded (hh:mm:ss) : ' + timeFormatter(totalSeconds) + '<br>' +avgPerDay(totalSeconds)+'</strong>'
         },
         tooltip: {
             formatter: function() {
-                return timeFormatter(this.y);
+                return 'Total: ' +
+                    timeFormatter(this.y) + '<br>'+avgPerDay(this.y) ;
             }
         },
         plotOptions: {
@@ -444,7 +451,7 @@ function activityChart(data) {
                 var result = [];
                 return activityData.map(function(item) {
                     return item.name;
-                }).slice(0, parseInt(document.getElementById("numberSpinnerTop").value));
+                }).slice(0, parseInt(document.getElementById("activitiesNumberSpinner").value));
             }
         },
         yAxis: {
@@ -457,7 +464,7 @@ function activityChart(data) {
         series: [{
             type: 'bar',
             name: 'Activities',
-            data: activityData.slice(0, parseInt(document.getElementById("numberSpinnerTop").value)),
+            data: activityData.slice(0, parseInt(document.getElementById("activitiesNumberSpinner").value)),
             showInLegend: false
         }, {
             type: 'pie',
@@ -491,12 +498,22 @@ function activityChart(data) {
     });
 }
 
+function avgPerDay(time){
+  if(!usingFiles){
+    var fromDate = new Date(document.getElementById('from').value);
+    var toDate = new Date(document.getElementById('to').value);
+    var timeDiff = Math.abs(toDate.getTime() - fromDate.getTime());
+    var diffDays = Math.ceil(timeDiff / (1000 * 3600 * 24));
+    var avgPerDay = time / diffDays;
+    return 'Average time per day: ' + timeFormatter(Math.ceil(avgPerDay));
+  }
+  return '';
+}
 
+//seconds to a readable format
 function timeFormatter(totalSeconds) {
-
     var hours = parseInt(totalSeconds / 3600);
     var minutes = parseInt(totalSeconds / 60) % 60;
     var seconds = totalSeconds % 60;
-
     return (hours < 10 ? '0' + hours : hours) + ':' + (minutes < 10 ? '0' + minutes : minutes) + ':' + (seconds < 10 ? '0' + seconds : seconds);
 }

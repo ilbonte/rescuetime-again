@@ -6,20 +6,20 @@
     <title>All in one</title>
     <script src="http://code.jquery.com/jquery-2.2.3.min.js" integrity="sha256-a23g1Nt4dtEYOj7bR+vTu7+T8VP13humZFBJNIYoEJo=" crossorigin="anonymous"></script>
     <!-- Latest compiled and minified CSS -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+    <!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous"> -->
+    <link rel="stylesheet" href="https://bootswatch.com/flatly/bootstrap.min.css" media="screen" title="no title" charset="utf-8">
     <!-- Latest compiled and minified JavaScript -->
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
     <script src="http://eternicode.github.io/bootstrap-datepicker/bootstrap-datepicker/js/bootstrap-datepicker.js"></script>
     <link rel="stylesheet" href="http://eternicode.github.io/bootstrap-datepicker/bootstrap-datepicker/css/datepicker3.css">
     <link rel="stylesheet" href="style.css">
 
-
 </head>
 
 <body>
     <div class="container-fluid">
         <div class="row row-centered">
-          <div class="alert alert-danger" role="alert"><strong>v2.0.0 beta</strong> This version is still in beta. If you want to use the old versions go <a href="#">here</a>. For futher information about this new version read the <a href="#">README</a> </div>
+            <div class="alert alert-danger" role="alert"><strong>v2.0.0 beta</strong> This version is still in beta. If you want to use the old versions go <a href="#">here</a>. For futher information about this new version read the <a href="#">README</a> </div>
             <div class="col-sm-8 col-centered">
                 <div class="page-header">
                     <h1>More <a target="_blank" href="https://www.rescuetime.com/">RescueTime</a> Charts
@@ -46,7 +46,7 @@
                         <span class="input-group-addon">from</span>
                         <input type="text" class="input-sm form-control" name="start" id="from" />
                         <span class="input-group-addon">to</span>
-                        <input type="text" class="input-sm form-control" name="end" id="to"  />
+                        <input type="text" class="input-sm form-control" name="end" id="to" />
                     </div>
                 </div>
             </div>
@@ -98,7 +98,8 @@
                     <p>This chart shows your productivity during the select range. Productivity is calculated with this formula:
                         <br>(Time*RescueTime's Productivity Score)/3600.
                         <br>This means that if you do 60 minutes with 100 as Productivity Score your productivity will be 100 too, but if you do only 30 minutes with 100 Productivity Score your productivity will be 50!
-                        <br> You can think at blue line as the thing you got done.
+                        <br> You can think at blue line as the things you got done.
+                    </p>
 
                 </blockquote>
                 <!--<h2>Productivity for the selected range</h2>-->
@@ -106,14 +107,12 @@
                 <div class="input-group">
 
                     <span class="input-group-addon">Trendline smoothness (1 to 50)</span>
-                    <input type="number" id="numberSpinner" min="1" max="50" class="form-control" value="5" />
+                    <input type="number" id="trendLineSpinner" min="1" max="50" class="form-control" value="5" />
 
                 </div>
 
                 <br>
-
-                <div id="efficiency_graph"></div>
-
+                <div id="efficiency_chart"></div>
             </div>
         </div>
 
@@ -121,13 +120,11 @@
             <div class="col-sm-12">
                 <!--<h2>Total minutes for hour</h2>-->
                 <blockquote class="col-sm-offset-1 col-sm-10">
-                    <p>This chart shows your average productivity and the total time spent for each hour of the day in the selected period. For the productivity is used the same formula as above.</p>
+                    <p>This chart shows your average productivity and the total time spent for each hour of the day in the selected period. For the productivity is used the same formula as above. <br>
+                    The higher the line compared to the bar the more efficient you have been</p>
                 </blockquote>
-                <br>
-                <br>
-                <br>
 
-                <div id="combo_hour_graph"></div>
+                <div id="combo_hour_chart"></div>
             </div>
         </div>
 
@@ -136,44 +133,38 @@
             <div class="col-sm-12">
                 <br>
                 <blockquote class="col-sm-offset-1 col-sm-10">
-                    <p>Same chart as above but grouped by days of week instead of by hour.</p>
+                    <p>Same chart as above but grouped by days of the week instead of by hour.</p>
                 </blockquote>
 
-                <div id="avg_day_graph"></div>
+                <div id="avg_day_chart"></div>
             </div>
         </div>
 
 
         <div class="row chart">
             <div class="col-sm-12">
-                <!--<h2>Total minutes for hour</h2>-->
-
-                <div id="combo_day_graph"></div>
+                <div id="combo_day_chart"></div>
             </div>
         </div>
 
         <div class="row chart">
-
             <div class="col-sm-12">
-                <h2>Top 50 activities </h2>
+                <h2>Top  activities </h2>
                 <blockquote class="col-sm-offset-1 col-sm-10">
                     <p>This chart simply show your top activities for the select range. Bar's color is based on RescueTime's colors.
                     </p>
                 </blockquote>
 
-                <h2 id="act-display"></h2>
-
                 <div id="customControls">
                     <div class="input-group">
                         <span class="input-group-addon">Top x activities. x=</span>
-                        <input type="number" id="numberSpinnerTop" min="3" max="100" class="form-control" value="30" />
+                        <input type="number" id="activitiesNumberSpinner" min="3" max="100" class="form-control" value="30" />
                         </span>
 
                     </div>
 
                 </div>
                 <div id="act_chart"></div>
-
             </div>
         </div>
 
@@ -181,33 +172,29 @@
 
     <script src="app.js"></script>
     <script>
-    var rightNow = new Date();
-    var oneWeekAgo = new Date();
-    oneWeekAgo.setDate(rightNow.getDate() - 7);
-    document.getElementById('from').value = oneWeekAgo.toISOString().slice(0, 10);
-    document.getElementById('to').value = rightNow.toISOString().slice(0, 10);
+        var rightNow = new Date();
+        var oneWeekAgo = new Date();
+        oneWeekAgo.setDate(rightNow.getDate() - 7);
+        document.getElementById('from').value = oneWeekAgo.toISOString().slice(0, 10);
+        document.getElementById('to').value = rightNow.toISOString().slice(0, 10);
         $(".chart").hide();
         $('#datepicker').datepicker({
             format: "yyyy-mm-dd",
             clearBtn: true,
             todayHighlight: true
         });
-
-
     </script>
     <a href="https://github.com/ilbonte/rescuetime-again"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://camo.githubusercontent.com/365986a132ccd6a44c23a9169022c0b5c890c387/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f7265645f6161303030302e706e67"
             alt="Fork me on GitHub" data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_right_red_aa0000.png"></a>
 
     <!-- highcharts  -->
-    <!-- <script src="https://code.highcharts.com/highcharts.js"></script> -->
-
     <script src="http://code.highcharts.com/stock/highstock.js"></script>
     <script src="http://code.highcharts.com/stock/modules/exporting.js"></script>
 
     <script src="http://rawgithub.com/phpepe/highcharts-regression/master/highcharts-regression.js">
-
     </script>
     <script src="https://cdn.rawgit.com/highcharts/highcharts/master/js/themes/sand-signika.js" charset="utf-8"></script>
+
 </body>
 
 </html>

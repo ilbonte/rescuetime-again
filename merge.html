@@ -34,7 +34,7 @@
     <script>
         var input = document.getElementById("filesToUpload");
         var uploadedFiles = [];
-
+        //load the files
         function makeFileList() {
             uploadedFiles.clear();
             var ul = document.getElementById("fileList");
@@ -67,11 +67,10 @@
             }
         }
 
+        //checks which operation to perform
         function merge() {
-
             if (document.getElementById('efficiency').checked) {
                 mergeEfficiency();
-
             } else if (document.getElementById('activity').checked) {
                 mergeActivity();
             }
@@ -86,7 +85,7 @@
                 allRows = allRows.concat(item.file.rows);
             });
             uploadedFiles[0].file.rows = _.sortBy(allRows);
-
+            //TODO: add check uniq?
             var JSONString = JSON.stringify(uploadedFiles[0].file);
             var data = "text/json;charset=utf-8," + encodeURIComponent(JSONString);
             $('<a href="data:' + data + '" download="Efficiency.json">[Efficiency] download JSON</a>').appendTo('#downloadSection');
@@ -125,7 +124,7 @@
             return total;
         }
 
-
+        //cehck if the file we need to merge is consistent
         function checkFile(file, correctHeader, type) {
             var header = file.file.row_headers;
             for (var i = 0; i < header.length; i++) {
@@ -137,6 +136,7 @@
             }
             return true;
         }
+
         Array.prototype.clear = function() {
             while (this.length) {
                 this.pop();
