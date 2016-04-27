@@ -20,7 +20,7 @@
         <input type="file" name="filesToUpload" id="filesToUpload" multiple="" onChange="makeFileList();" />
     </p>
     <button onClick="merge()">MERGE!</button>
-    <button onClick="reset()">ResetAll</button>
+    <button onClick="removeOldFiles()">ResetAll</button>
     <div id="downloadSection">
 
     </div>
@@ -36,11 +36,10 @@
         var uploadedFiles = [];
         //load the files
         function makeFileList() {
+          var ul = document.getElementById("fileList");
+          
             uploadedFiles.clear();
-            var ul = document.getElementById("fileList");
-            while (ul.hasChildNodes()) {
-                ul.removeChild(ul.firstChild);
-            }
+            removeOldFiles();
             for (var i = 0; i < input.files.length; i++) {
                 var li = document.createElement("li");
                 li.innerHTML = input.files[i].name;
@@ -88,7 +87,7 @@
             //TODO: add check uniq?
             var JSONString = JSON.stringify(uploadedFiles[0].file);
             var data = "text/json;charset=utf-8," + encodeURIComponent(JSONString);
-            $('<a href="data:' + data + '" download="Efficiency.json">[Efficiency] download JSON</a>').appendTo('#downloadSection');
+            $('<a href="data:' + data + '" download="Efficiency.json">[Efficiency] download JSON</a> <br>').appendTo('#downloadSection');
         }
 
         function mergeActivity() {
@@ -108,7 +107,7 @@
                 return b[1] - a[1];
             });
             var data = "text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(result));
-            $('<a href="data:' + data + '" download="Activity.json">[Activity] download JSON</a>').appendTo('#downloadSection');
+            $('<a href="data:' + data + '" download="Activity.json">[Activity] download JSON</a> <br>').appendTo('#downloadSection');
         }
 
         function mergeActivityFile(total, current) {
@@ -122,6 +121,13 @@
             }
             total.rows = total.rows.concat(current.rows);
             return total;
+        }
+
+        function removeOldFiles() {
+            var ul = document.getElementById("fileList");
+            while (ul.hasChildNodes()) {
+                ul.removeChild(ul.firstChild);
+            }
         }
 
         //cehck if the file we need to merge is consistent

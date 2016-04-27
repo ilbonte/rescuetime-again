@@ -2,7 +2,9 @@
 
 [RescueTime](https://www.rescuetime.com) is a fantastic tool for time management and I use it mainly to understand my daily habits so I can be more productive.
 Unfortunately the free version doesn't have such in-depth analysis as I like so I built my own charts using their API to access the data.
-If you have suggestions for new features send me an email
+If you have suggestions for new features send me an email.
+For the best result be sure to categorize activity on RescueTime!
+If you want to use the old version go here!
 
 # Usage
 
@@ -31,12 +33,13 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 #### Notable changes:
 - Full rewrite of the JS code
 - Moved from Google charts to Highcarts
+- Merge page supports multiple file upload
 
 ### [1.0.0] - 01-12-2015
 #### Notable changes:
 - Added merge page
 - Added combined chart for day and hour
- 
+
 ### Example
 [Example output with 11 months of data](http://i.imgur.com/h1PElrI.png)
 ![alt tag](http://i.imgur.com/h1PElrI.png)
