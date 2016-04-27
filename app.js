@@ -1,6 +1,5 @@
 //----------DEFAULT VARIABLES----------
 
-
 var usingFiles = false; //True if the user uploaded his own JSON
 var failCount = 0; //Counts how many times getData tries the request if there is a failure
 var rawEfficencyData; //contains the efficiency's data (first 3 chart)
@@ -20,8 +19,10 @@ var queries = {
 
 
 $("document").ready(function() {
+    //handling upload event
     $('#fileEfficency').on('change', fileUploaded);
     $('#fileActivity').on('change', fileUploaded);
+
 
     //redraw the efficiency chart when the value change
     $('#trendLineSpinner').on('change', function(event) {
@@ -61,6 +62,7 @@ function init() {
     }
 }
 
+//get the data using rescuetime api
 function getData(params) {
     var rescuetimeAPI = 'https://www.rescuetime.com/anapi/data?';
     $.getJSON('https://allow-any-origin.appspot.com/' + rescuetimeAPI, {
@@ -77,16 +79,16 @@ function getData(params) {
                 alert(data.messages);
             }
             if (params.restrict_kind === 'efficiency') {
-                fullEfficiencyChart(data.rows);
-                combinedCharts(data.rows);
+                fullEfficiencyChart(data.rows); //draw the efficency chart for the period
+                combinedCharts(data.rows); //draw the chats with efficency and totaltime combined
                 rawEfficencyData = data.rows;
             } else if (params.restrict_kind === 'activity') {
-                activityChart(data.rows);
+                activityChart(data.rows); //draw the chart with the list of the top activities
                 rawActivityData = data.rows;
             }
 
             if (document.getElementById('download').checked) {
-                startDownload(data, params.restrict_kind);
+                startDownload(data, params.restrict_kind); //start the download of the files for the selected period
             }
 
             $('.spinner').hide();
@@ -98,7 +100,6 @@ function getData(params) {
                 var modal = $('<div class="modal fade bs-modal-sm" tabindex="-1" role="dialog"> <div class="modal-dialog modal-sm"> <div class="modal-content">Error retriving your data. Please try again later. If you keep getting this error please open an issue on GitHub or send an email to davide.bonte@gmail.com </div></div></div>');
                 modal.modal('show');
             }
-            // jqxhr.status
             //TODO: add retry for 403 over quota?
             var err = textStatus + ', ' + error;
             console.log('Request Failed: ' + err);
@@ -120,7 +121,7 @@ function checkFiles() {
     }
 }
 
-
+//load the uploaded file in the variables
 function fileUploaded(event) {
     var file = event.target.files[0];
     var reader = new FileReader();
