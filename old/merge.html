@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>RescueTime, again</title>
+    <script src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
+</head>
+
+<body>
+<h1>Merge</h1>
+
+<h2>Which type of file do you want to merge?</h2>
+<input type="radio" name="type" value="hour" id="hour" checked>Hour (Productivity/Efficiency)
+<br>
+<input type="radio" name="type" value="activity" id="activity">Activity
+<h3>Upload your files in chronological order!</h3>
+<h6>A file at a time </h6>
+<input id="file" type="file"/>
+<button onClick="choose()">MERGE!</button>
+<button onClick="reset()">ResetAll</button>
+<ul id="fileList">
+
+</ul>
+<script>
+    var files = [];
+    (function () {
+
+        function onChange(event) {
+            var reader = new FileReader();
+            reader.onload = onReaderLoad;
+            reader.readAsText(event.target.files[0]);
+            $("#fileList").append("<li>" + document.getElementById('file').value + "</li>");
+
+        }
+
+        function onReaderLoad(event) {
+            console.log(event.target.result);
+            var obj = JSON.parse(event.target.result);
+            files.push(obj);
+
+        }
+
+        document.getElementById('file').addEventListener('change', onChange);
+
+    }());
+
+    function choose() {
+        if (document.getElementById('hour').checked) {
+            mergeHours();
+        } else if (document.getElementById('activity').checked) {
+            mergeActivity();
+
+        }
+    }
+
+    function mergeHours() {
+        var tot;
+        tot = files[0];
+        console.log(files);
+        for (var i = 1; i < files.length; i++) {
+            tot.rows = tot.rows.concat(files[i].rows);
+        }
+        var JSONString = JSON.stringify(tot);
+        var data = "text/json;charset=utf-8," + encodeURIComponent(JSONString);
+        $('<a href="data:' + data + '" download="Hours-Efficency.json">download JSON</a>').appendTo('#fileList');
+    }
+
+    function mergeActivity() {
+        console.log("mergin'");
+        var tot;
+        tot = files[0];
+        console.log(files);
+        for (var i = 1; i < files.length; i++) {
+            tot = merge(tot, files[i]);
+        }
+
+
+        tot.rows = tot.rows.sort(function (a, b) {
+            return b[1] - a[1];
+        });
+
+        var JSONString = JSON.stringify(tot);
+        var data = "text/json;charset=utf-8," + encodeURIComponent(JSONString);
+        $('<a href="data:' + data + '" download="Activity.json">download JSON</a>').appendTo('#fileList');
+
+
+    }
+
+    function merge(full, mese) {
+        for (var i = 0; i < full.rows.length; i++) {
+            for (var j = 0; j < mese.rows.length; j++) {
+                if (full.rows[i][3] === mese.rows[j][3]) {
+                    full.rows[i][1] += mese.rows[j][1];
+                    mese.rows.splice(j, 1);
+                }
+            }
+        }
+
+        full.rows = full.rows.concat(mese.rows);
+        return full;
+    }
+
+    function reset(){
+        files.clear();
+        $("#fileList").empty();
+    }
+
+    Array.prototype.clear = function() {
+        while (this.length) {
+            this.pop();
+        }
+    };
+</script>
+</body>
+
+</html>
