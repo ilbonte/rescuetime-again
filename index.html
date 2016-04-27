@@ -4,236 +4,198 @@
 <head>
     <meta charset="UTF-8">
     <title>All in one</title>
-    <script src="https://code.jquery.com/jquery-1.11.2.min.js"></script>
+    <script src="http://code.jquery.com/jquery-2.2.3.min.js" integrity="sha256-a23g1Nt4dtEYOj7bR+vTu7+T8VP13humZFBJNIYoEJo=" crossorigin="anonymous"></script>
     <!-- Latest compiled and minified CSS -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+    <!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous"> -->
+    <link rel="stylesheet" href="https://bootswatch.com/flatly/bootstrap.min.css" media="screen" title="no title" charset="utf-8">
     <!-- Latest compiled and minified JavaScript -->
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
     <script src="http://eternicode.github.io/bootstrap-datepicker/bootstrap-datepicker/js/bootstrap-datepicker.js"></script>
-    <link rel="stylesheet"
-          href="http://eternicode.github.io/bootstrap-datepicker/bootstrap-datepicker/css/datepicker3.css">
+    <link rel="stylesheet" href="http://eternicode.github.io/bootstrap-datepicker/bootstrap-datepicker/css/datepicker3.css">
     <link rel="stylesheet" href="style.css">
-    <script type="text/javascript" src="https://www.google.com/jsapi"></script>
-    <script type="text/javascript"
-            src="https://www.gstatic.com/charts/loader.js"></script>
-    <script src="https://github.com/niklasvh/html2canvas/releases/download/0.5.0-alpha1/html2canvas.js"></script>
 
 </head>
 
 <body>
-<div class="container-fluid" id="screen">
-    <div class="row row-centered">
-        <div class="col-sm-8 col-centered">
-            <div class="page-header">
-                <h1>More <a target="_blank" href="https://www.rescuetime.com/">RescueTime</a> Charts
+    <div class="container-fluid">
+        <div class="row row-centered">
+            <div class="alert alert-danger" role="alert"><strong>v2.0.0 beta</strong> This version is still in beta. If you want to use the old versions go <a href="#">here</a>. To learn what's new read the <a href="#">README</a> </div>
+            <div class="col-sm-8 col-centered">
+                <div class="page-header">
+                    <h1>More <a target="_blank" href="https://www.rescuetime.com/">RescueTime</a> Charts v2.0.0
                     <small>Cuz <a href="https://www.reddit.com/r/dataisbeautiful/top/?sort=top&t=month" target="_blank">data
                         are beautiful!</a></small>
                 </h1>
-                <h5>Psssst: you really should read the <a href="https://github.com/ilbonte/rescuetime-again" TARGET="_blank">README</a> before using this tool!
+                    <h5>Psssst: you really should read the <a href="https://github.com/ilbonte/rescuetime-again" TARGET="_blank">README</a> before using this tool!
                 </h5>
-            </div>
-        </div>
-    </div>
-    <div class="row">
-        <div class="spinner"></div>
-    </div>
-    <div class="row" id="controls">
-        <div class="col-sm-6">
-            <div class="form-group">
-                <h2>Get the data from RescueTime</h2>
-                <label><a href="https://www.rescuetime.com/anapi/manage" target="_blank">Choose your API Key</a>
-                </label>
-                <input type="text" class="form-control" id="api_key" placeholder="Enter API key"
-                       value="">
-
-                <div class="input-daterange input-group" id="datepicker">
-                    <span class="input-group-addon">from</span>
-                    <input type="text" class="input-sm form-control" name="start" id="from" value=""/>
-                    <span class="input-group-addon">to</span>
-                    <input type="text" class="input-sm form-control" name="end" id="to" value=""/>
                 </div>
             </div>
         </div>
-        <div class="col-sm-4">
-            <br>NOTE: It may take some second to retrive and elaborate the data
-            <br>
-            <button type="button" class="btn btn-primary" onClick="init()">Elaborate</button>
-            <div class="checkbox">
-                <label>
-                    <input type="checkbox" id="download"> Download JSON file for the selected range. <a href="https://github.com/ilbonte/rescuetime-again#notes"
-                                                                                                        target="_blank">Why?</a>
-                </label>
+        <div class="row">
+            <div class="spinner" hidden></div>
+        </div>
+        <div class="row" id="controls">
+            <div class="col-sm-6">
+                <div class="form-group">
+                    <h2>Get the data from RescueTime</h2>
+                    <label><a href="https://www.rescuetime.com/anapi/manage" target="_blank">Choose your API Key</a>
+                    </label>
+                    <input type="text" class="form-control" id="api_key" placeholder="Enter API key" value="">
+
+                    <div class="input-daterange input-group" id="datepicker">
+                        <span class="input-group-addon">from</span>
+                        <input type="text" class="input-sm form-control" name="start" id="from" />
+                        <span class="input-group-addon">to</span>
+                        <input type="text" class="input-sm form-control" name="end" id="to" />
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-4">
+                <br>NOTE: It may take some second to retrive and elaborate the data
+                <br>
+                <button type="button" class="btn btn-primary" onClick="init()">Start analysis</button>
+                <div class="checkbox">
+                    <label>
+                        <input type="checkbox" id="download"> Download JSON file for the selected range. <a href="https://github.com/ilbonte/rescuetime-again#notes" target="_blank">Why?</a>
+                    </label>
+                </div>
+            </div>
+            <div class="col-sm-2" id="downloadSection">
+
             </div>
         </div>
-        <div class="col-sm-2" id="downloadSection">
+        <div class="row">
+            <div class="col-sm-12">
+                <h2> OR upload your files</h2>
 
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-sm-12"><h2> OR upload your files</h2>
+                <h6>Go to the <a href="http://ilbonte.github.io/rescuetime-again/merge.html">merge page</a></h6>
+                <H6>What is this or don't know how to use it? Read <a
+                    href="https://github.com/ilbonte/rescuetime-again#notes">HERE</a></H6>
+            </div>
 
-            <h6>Go to the <a href="http://ilbonte.github.io/rescuetime-again/merge.html">merge page</a></h6>
-            <H6>What is this or don't know how to use it? Read <a
-                    href="https://github.com/ilbonte/rescuetime-again#notes">HERE</a></H6></div>
-
-
-        <div class="col-sm-3">
-            <h3>Activity</h3>
-            <input id="fileActivity" type="file"/>
-
-        </div>
-        <div class="col-sm-3">
-            <h3>Efficency</h3>
-            <input id="fileEfficency" type="file"/>
-
-        </div>
-        <div class="col-sm-4">
-            <br>
-            <button type="button" class="btn btn-primary" onClick="checkFiles()">Elaborate</button>
-        </div>
-
-    </div>
-
-
-    <div class="row chart">
-        <div class="col-sm-12">
-            <blockquote class="col-sm-offset-1 col-sm-10">
-                <p>This chart shows your productivity during the select range. Productivity is calculated with this
-                    formula: <br>(Time*RescueTime's Productivity Score)/3600. <br>This means that if you do 60 minutes
-                    with
-                    100 as Productivity Score your productivity will be 100 too, but if you do only 30 minutes with 100
-                    Productivity Score your productivity will be 50! <br> You can think at blue line as the thing you
-                    got done.
-                    <br> If show dates is checked instead of points you will be able to see date and time for individual
-                    dots but the trend line may not be available.</p>
-            </blockquote>
-            <!--<h2>Productivity for the selected range</h2>-->
-
-            <div class="input-group">
-
-                <span class="input-group-addon">Trendline degree (linear-50)</span>
-                <input type="number" id="numberSpinner" min="1" max="50" class="form-control"
-                       value="20"/> <span class="input-group-btn" onClick="updateProd()">
-        <button class="btn btn-default" type="button">Go!</button>
-      </span>
+            <div class="col-sm-3">
+                <h3>Efficency</h3>
+                <input id="fileEfficency" type="file" />
 
             </div>
-            <label class="checkbox-inline"><input type="checkbox" id="showDates">Show dates on x-axis (no trend line
-                available)</label>
-            <br>
-            <br>
 
-            <div id="efficiency_graph"></div>
+            <div class="col-sm-3">
+                <h3>Activity</h3>
+                <input id="fileActivity" type="file" />
+
+            </div>
+            <div class="col-sm-4">
+                <br>
+                <button type="button" class="btn btn-info" onClick="checkFiles()">Analyze uploaded data</button>
+            </div>
 
         </div>
-    </div>
-    <div class="row chart">
-        <div class="col-sm-12">
-            <blockquote class="col-sm-offset-1 col-sm-10">
-                <p>This chart shows your average productivity during a day. To calculate the points the productivity as
-                    been grouped by hour and then averaged. For the productivity is used the same formula as above.</p>
-            </blockquote>
-            <br>
-            <!--<h2>Your average pro through the day</h2>-->
 
 
-            <div id="avg_hour_graph"></div>
-        </div>
-    </div>
+        <div class="row chart">
+            <div class="col-sm-12">
+                <blockquote class="col-sm-offset-1 col-sm-10">
+                    <p>This chart shows your productivity during the select range. Productivity is calculated with this formula:
+                        <br>(Time*RescueTime's Productivity Score)/3600.
+                        <br>This means that if you do 60 minutes with 100 as Productivity Score your productivity will be 100 too, but if you do only 30 minutes with 100 Productivity Score your productivity will be 50!
+                        <br> You can think at blue line as the things you got done.
+                    </p>
 
-    <div class="row chart">
-        <div class="col-sm-12">
-            <!--<h2>Total minutes for hour</h2>-->
-            <blockquote class="col-sm-offset-1 col-sm-10">
-                <p>This chart shows your average productivity and the total time spent for each hour in the selected
-                    period. If there is a big gap between the line and the bars this means that for that specific point
-                    your RescueTime's productivity pulse where high</p>
-            </blockquote>
-            <br>
-            <br>
-            <br>
+                </blockquote>
+                <!--<h2>Productivity for the selected range</h2>-->
 
-            <div id="combo_hour_graph"></div>
-        </div>
-    </div>
-
-
-    <div class="row chart">
-        <div class="col-sm-12">
-            <br>
-            <blockquote class="col-sm-offset-1 col-sm-10">
-                <p>These charts are the same as the two above but are grouped by days of week instead of by hour.</p>
-            </blockquote>
-
-            <!--<h2>Your average pro through the day</h2>-->
-
-            <div id="avg_day_graph"></div>
-        </div>
-    </div>
-
-
-    <div class="row chart">
-        <div class="col-sm-12">
-            <!--<h2>Total minutes for hour</h2>-->
-
-            <div id="combo_day_graph"></div>
-        </div>
-    </div>
-
-    <div class="row chart">
-
-        <div class="col-sm-12">
-            <h2>Top 50 activities </h2>
-            <blockquote class="col-sm-offset-1 col-sm-10">
-                <p>This chart simply show your top activities for the select range. Bar's color is based on RescueTime's
-                    colors.</p>
-            </blockquote>
-
-            <h2 id="act-display"></h2>
-
-            <div id="customControls">
                 <div class="input-group">
-                    <span class="input-group-addon">Top x activities. x=</span>
-                    <input type="number" id="numberSpinnerTop" min="3" max="200" class="form-control"
-                           value="50"/> <span class="input-group-btn" onClick="updateTopAct()">
-        <button class="btn btn-default" type="button">Refresh</button>
-      </span>
+
+                    <span class="input-group-addon">Trendline smoothness (1 to 50)</span>
+                    <input type="number" id="trendLineSpinner" min="1" max="50" class="form-control" value="5" />
 
                 </div>
-                <div class="dropup">
-                    <button class="btn btn-default dropdown-toggle" type="button" id="time" data-toggle="dropdown"
-                            aria-haspopup="true" aria-expanded="true">
-                        Select unit
-                        <span class="caret"></span>
-                    </button>
-                    <ul class="dropdown-menu" aria-labelledby="time">
-                        <li value="60">Minutes</li>
-                        <li value="3600">Hours</li>
-                        <li value="86400">Days</li>
-                    </ul>
+
+                <br>
+                <div id="efficiency_chart"></div>
+            </div>
+        </div>
+
+        <div class="row chart">
+            <div class="col-sm-12">
+                <!--<h2>Total minutes for hour</h2>-->
+                <blockquote class="col-sm-offset-1 col-sm-10">
+                    <p>This chart shows your average productivity and the total time spent for each hour of the day in the selected period. For the productivity is used the same formula as above. <br>
+                    The higher the line compared to the bar the more efficient you have been</p>
+                </blockquote>
+
+                <div id="combo_hour_chart"></div>
+            </div>
+        </div>
+
+
+        <div class="row chart">
+            <div class="col-sm-12">
+                <br>
+                <blockquote class="col-sm-offset-1 col-sm-10">
+                    <p>Same chart as above but grouped by days of the week instead of by hour.</p>
+                </blockquote>
+
+                <div id="avg_day_chart"></div>
+            </div>
+        </div>
+
+
+        <div class="row chart">
+            <div class="col-sm-12">
+                <div id="combo_day_chart"></div>
+            </div>
+        </div>
+
+        <div class="row chart">
+            <div class="col-sm-12">
+                <h2>Top  activities </h2>
+                <blockquote class="col-sm-offset-1 col-sm-10">
+                    <p>This chart simply show your top activities for the select range. Bar's color is based on RescueTime's colors.
+                    </p>
+                </blockquote>
+
+                <div id="customControls">
+                    <div class="input-group">
+                        <span class="input-group-addon">Top x activities. x=</span>
+                        <input type="number" id="activitiesNumberSpinner" min="3" max="100" class="form-control" value="30" />
+                        </span>
+
+                    </div>
+
                 </div>
+                <div id="act_chart"></div>
             </div>
-            <div id="act-chartRangeFilter_dashboard_div">
-                <div id="act-numberRangeFilter_control_div"></div>
-
-                <div id="act-numberRangeFilter_chart_div"></div>
-            </div>
-        </div>
-    </div>
-    <div class="row chart">
-        <div class="col-sm-offset-4 col-sm-4"><br>
-            <button type="button" class="btn btn-primary" onClick="screenShot()">Download as image (alpha)</button>
         </div>
 
     </div>
-</div>
 
-<script src="app.js"></script>
-<script>
-    datePickerOptions();
-    //init()
-</script>
-<a href="https://github.com/ilbonte/rescuetime-again"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://camo.githubusercontent.com/365986a132ccd6a44c23a9169022c0b5c890c387/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f7265645f6161303030302e706e67" alt="Fork me on GitHub" data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_right_red_aa0000.png"></a>
+    <script src="app.js"></script>
+    <script>
+    //set default values
+        var rightNow = new Date();
+        var oneWeekAgo = new Date();
+        oneWeekAgo.setDate(rightNow.getDate() - 7);
+        document.getElementById('from').value = oneWeekAgo.toISOString().slice(0, 10);
+        document.getElementById('to').value = rightNow.toISOString().slice(0, 10);
+        $(".chart").hide();
+        $('#datepicker').datepicker({
+            format: "yyyy-mm-dd",
+            clearBtn: true,
+            todayHighlight: true
+        });
+    </script>
+    <a href="https://github.com/ilbonte/rescuetime-again"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://camo.githubusercontent.com/365986a132ccd6a44c23a9169022c0b5c890c387/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f7265645f6161303030302e706e67"
+            alt="Fork me on GitHub" data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_right_red_aa0000.png"></a>
+
+    <!-- highcharts  -->
+    <script src="http://code.highcharts.com/stock/highstock.js"></script>
+    <script src="http://code.highcharts.com/stock/modules/exporting.js"></script>
+
+    <script src="http://rawgithub.com/phpepe/highcharts-regression/master/highcharts-regression.js">
+    </script>
+    <script src="https://cdn.rawgit.com/highcharts/highcharts/master/js/themes/sand-signika.js" charset="utf-8"></script>
+
 </body>
 
 </html>
