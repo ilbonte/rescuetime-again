@@ -24,7 +24,19 @@ If you have a free plan and you would like to analyse a period longer than 3 mon
 
 Pull requests for bux-fix are welcome. If you want to add a new feature just open an issue before so we can discuss together
 
+## Change Log
+This project adheres to [Semantic Versioning](http://semver.org/).
 
+### [2.0.0] - 27-04-2016
+#### Notable changes:
+- Full rewrite of the JS code
+- Moved from Google charts to Highcarts
+
+### [1.0.0] - 01-12-2015
+#### Notable changes:
+- Added merge page
+- Added combined chart for day and hour
+ 
 ### Example
 [Example output with 11 months of data](http://i.imgur.com/h1PElrI.png)
 ![alt tag](http://i.imgur.com/h1PElrI.png)
