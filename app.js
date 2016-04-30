@@ -140,7 +140,13 @@ function fileUploaded(event) {
 function startDownload(data, type) {
     var JSONString = JSON.stringify(data);
     var file = "text/json;charset=utf-8," + encodeURIComponent(JSONString);
-    $('<a href="data:' + file + '" download="' + type + '+' + document.getElementById('from').value + ' to ' + document.getElementById('to').value + '.json" id="download' + type + '">Download ' + type + ' Data</a> <br>').appendTo('#downloadSection');
+    $('<a>', {
+      href:"data:"+ file,
+      download: type + "_"+ document.getElementById('from').value + "_to_"+ document.getElementById('to').value +".json",
+      id:"download"+type,
+      text:"Download "+type + " data"
+    }).appendTo('#downloadSection');
+    $('<br>').appendTo('#downloadSection');
     $('#download' + type).get(0).click();
 }
 
@@ -204,7 +210,7 @@ function fullEfficiencyChart(data) {
             regressionSettings: {
                 type: 'loess',
                 color: '#1111cc',
-                loessSmooth: parseInt(document.getElementById("trendLineSpinner").value)
+                loessSmooth: parseInt(document.getElementById("trendLineSpinner").value,10)
 
             },
         }]
@@ -220,7 +226,7 @@ function combinedCharts(data) {
     var hour = 0;
     var day = 0;
     data.forEach(function(element) {
-        hour = parseInt(element[0].substr(11, 2)); //note: I can't use Date() because rescuetime log the date based on user's system time which is in GMT but when using Date() on the string in the JSON is converted in UTC :(
+        hour = parseInt(element[0].substr(11, 2),10); //note: I can't use Date() because rescuetime log the date based on user's system time which is in GMT but when using Date() on the string in the JSON is converted in UTC :(
         day = new Date(element[0].substr(0, 10)).getDay();
 
         hours[hour].totalTime += element[1]; //sum of the total time for a given hour
@@ -452,7 +458,7 @@ function activityChart(data) {
                 var result = [];
                 return activityData.map(function(item) {
                     return item.name;
-                }).slice(0, parseInt(document.getElementById("activitiesNumberSpinner").value));
+                }).slice(0, parseInt(document.getElementById("activitiesNumberSpinner").value),10);
             }
         },
         yAxis: {
@@ -465,7 +471,7 @@ function activityChart(data) {
         series: [{
             type: 'bar',
             name: 'Activities',
-            data: activityData.slice(0, parseInt(document.getElementById("activitiesNumberSpinner").value)),
+            data: activityData.slice(0, parseInt(document.getElementById("activitiesNumberSpinner").value),10),
             showInLegend: false
         }, {
             type: 'pie',
@@ -513,8 +519,8 @@ function avgPerDay(time){
 
 //seconds to a readable format
 function timeFormatter(totalSeconds) {
-    var hours = parseInt(totalSeconds / 3600);
-    var minutes = parseInt(totalSeconds / 60) % 60;
+    var hours = parseInt(totalSeconds / 3600, 10);
+    var minutes = parseInt(totalSeconds / 60, 10) % 60;
     var seconds = totalSeconds % 60;
     return (hours < 10 ? '0' + hours : hours) + ':' + (minutes < 10 ? '0' + minutes : minutes) + ':' + (seconds < 10 ? '0' + seconds : seconds);
 }
