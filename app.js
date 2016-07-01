@@ -37,7 +37,7 @@ $("document").ready(function() {
 
 
 function init() {
-    var key = document.getElementById('api_key').value;
+    var key = document.getElementById('api_key').value.trim();
     if (key.length > 5) {
         usingFiles = false;
 
