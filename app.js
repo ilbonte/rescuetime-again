@@ -162,6 +162,30 @@ function fullEfficiencyChart(data) {
         // normalizedData.push([new Date(point[0]).getTime(), point[4]]);
     });
 
+    // Calculate weekend dates.
+    // NB: Assumes points are sorted.
+    var endDate = new Date(data[data.length - 1][0]);
+    endDate.setHours(0, 0, 0, 0);
+
+    var minDate = new Date(data[0][0]);
+    // We want to start on a Saturday
+    var delta = 6 - minDate.getDay();
+    var curDate = new Date(minDate.getFullYear(), minDate.getMonth(), minDate.getDate() + delta);
+
+    var weekendBands = [];
+    while (curDate <= endDate) {
+        var bandEnd = addDays(curDate, 1);
+        bandEnd.setHours(23, 59, 59, 0);
+        weekendBands.push({
+            color: 'rgba(180, 180, 180, 0.6)',
+            from: curDate.getTime(),
+            to: bandEnd.getTime(),
+            type: 'datetime'
+        });
+
+        curDate.setDate(curDate.getDate() + 7);
+    }
+
 
     $('#efficiency_chart').highcharts('StockChart', {
         chart: {
@@ -213,7 +237,11 @@ function fullEfficiencyChart(data) {
                 loessSmooth: parseInt(document.getElementById("trendLineSpinner").value,10)
 
             },
-        }]
+        }],
+
+        xAxis: {
+            plotBands: weekendBands
+        }
     });
     Highcharts.setOptions(Highcharts.theme);
 
@@ -523,4 +551,10 @@ function timeFormatter(totalSeconds) {
     var minutes = parseInt(totalSeconds / 60, 10) % 60;
     var seconds = totalSeconds % 60;
     return (hours < 10 ? '0' + hours : hours) + ':' + (minutes < 10 ? '0' + minutes : minutes) + ':' + (seconds < 10 ? '0' + seconds : seconds);
+}
+
+function addDays(date, days) {
+    var result = new Date(date);
+    result.setDate(result.getDate() + days);
+    return result;
 }
