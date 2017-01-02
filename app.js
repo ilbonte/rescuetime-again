@@ -17,6 +17,20 @@ var queries = {
     }
 };
 
+//check for local storage
+var ls =  {
+    get: function () { 
+        var test = 'test';
+        try {
+            localStorage.setItem(test, test);
+            localStorage.removeItem(test);
+            return true;
+        } catch(e) {
+            return false;
+        }
+    }
+};
+
 
 $("document").ready(function() {
     //handling upload event
@@ -33,11 +47,37 @@ $("document").ready(function() {
         activityChart(rawActivityData);
     });
 
+    //if a key is saved, load it in the 'Enter API key' field
+    if (ls) {
+    	// We can use localStorage 
+        if(!localStorage.getItem('rescuetimeApiKey')) {
+            //no stored API Key
+            console.log("No stored API Key");
+        } else {
+            key = localStorage.getItem('rescuetimeApiKey');
+            document.getElementById('api_key').value = key;
+            document.getElementById('api_key').placeholder = '';
+            console.log("retrieving key from storage");
+        }
+    }
 });
+
+function storeKey(key) {
+    if (ls) {
+        localStorage.setItem('rescuetimeApiKey', key);
+        console.log("Saving key");
+    }
+}
 
 
 function init() {
     var key = document.getElementById('api_key').value.trim();
+
+    // Only store the key if the save box is checked
+    if (document.getElementById('save').checked) {
+        storeKey(key);
+    }
+
     if (key.length > 5) {
         usingFiles = false;
 
