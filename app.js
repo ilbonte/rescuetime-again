@@ -18,39 +18,39 @@ var queries = {
 };
 
 //check for local storage
-var ls =  {
-    get: function () { 
+var ls = {
+    get: function () {
         var test = 'test';
         try {
             localStorage.setItem(test, test);
             localStorage.removeItem(test);
             return true;
-        } catch(e) {
+        } catch (e) {
             return false;
         }
     }
 };
 
 
-$("document").ready(function() {
+$("document").ready(function () {
     //handling upload event
     $('#fileEfficency').on('change', fileUploaded);
     $('#fileActivity').on('change', fileUploaded);
 
 
     //redraw the efficiency chart when the value change
-    $('#trendLineSpinner').on('change', function(event) {
+    $('#trendLineSpinner').on('change', function (event) {
         fullEfficiencyChart(rawEfficencyData);
     });
 
-    $('#activitiesNumberSpinner').on('change', function(event) {
+    $('#activitiesNumberSpinner').on('change', function (event) {
         activityChart(rawActivityData);
     });
 
     //if a key is saved, load it in the 'Enter API key' field
     if (ls) {
-    	// We can use localStorage 
-        if(!localStorage.getItem('rescuetimeApiKey')) {
+        // We can use localStorage 
+        if (!localStorage.getItem('rescuetimeApiKey')) {
             //no stored API Key
             console.log("No stored API Key");
         } else {
@@ -106,15 +106,15 @@ function init() {
 function getData(params) {
     var rescuetimeAPI = 'https://www.rescuetime.com/anapi/data?';
     $.getJSON('https://allow-any-origin.appspot.com/' + rescuetimeAPI, {
-            key: params.key,
-            perspective: params.perspective,
-            restrict_kind: params.restrict_kind,
-            interval: params.interval,
-            restrict_begin: params.restrict_begin,
-            restrict_end: params.restrict_end,
-            format: params.format
-        })
-        .done(function(data) {
+        key: params.key,
+        perspective: params.perspective,
+        restrict_kind: params.restrict_kind,
+        interval: params.interval,
+        restrict_begin: params.restrict_begin,
+        restrict_end: params.restrict_end,
+        format: params.format
+    })
+        .done(function (data) {
             if (data.error) {
                 alert(data.messages);
             }
@@ -132,7 +132,7 @@ function getData(params) {
             }
 
             $('.spinner').hide();
-        }).fail(function(jqxhr, textStatus, error) {
+        }).fail(function (jqxhr, textStatus, error) {
             failCount++;
             if (failCount < 3) {
                 setTimeout(getData(params), failCount * 300);
@@ -165,7 +165,7 @@ function checkFiles() {
 function fileUploaded(event) {
     var file = event.target.files[0];
     var reader = new FileReader();
-    reader.onload = function(e) {
+    reader.onload = function (e) {
         if (event.target.id === 'fileEfficency') {
             rawEfficencyData = (JSON.parse(e.target.result)).rows;
         } else if (event.target.id === 'fileActivity') {
@@ -181,10 +181,10 @@ function startDownload(data, type) {
     var JSONString = JSON.stringify(data);
     var file = "text/json;charset=utf-8," + encodeURIComponent(JSONString);
     $('<a>', {
-      href:"data:"+ file,
-      download: type + "_"+ document.getElementById('from').value + "_to_"+ document.getElementById('to').value +".json",
-      id:"download"+type,
-      text:"Download "+type + " data"
+        href: "data:" + file,
+        download: type + "_" + document.getElementById('from').value + "_to_" + document.getElementById('to').value + ".json",
+        id: "download" + type,
+        text: "Download " + type + " data"
     }).appendTo('#downloadSection');
     $('<br>').appendTo('#downloadSection');
     $('#download' + type).get(0).click();
@@ -197,7 +197,7 @@ function startDownload(data, type) {
 
 function fullEfficiencyChart(data) {
     var normalizedData = [];
-    data.forEach(function(point) {
+    data.forEach(function (point) {
         normalizedData.push([new Date(point[0]).getTime(), (point[4] * point[1]) / 3600]);
         // normalizedData.push([new Date(point[0]).getTime(), point[4]]);
     });
@@ -274,7 +274,7 @@ function fullEfficiencyChart(data) {
             regressionSettings: {
                 type: 'loess',
                 color: '#1111cc',
-                loessSmooth: parseInt(document.getElementById("trendLineSpinner").value,10)
+                loessSmooth: parseInt(document.getElementById("trendLineSpinner").value, 10)
 
             },
         }],
@@ -293,8 +293,8 @@ function combinedCharts(data) {
     var days = initializeArray(7);
     var hour = 0;
     var day = 0;
-    data.forEach(function(element) {
-        hour = parseInt(element[0].substr(11, 2),10); //note: I can't use Date() because rescuetime log the date based on user's system time which is in GMT but when using Date() on the string in the JSON is converted in UTC :(
+    data.forEach(function (element) {
+        hour = parseInt(element[0].substr(11, 2), 10); //note: I can't use Date() because rescuetime log the date based on user's system time which is in GMT but when using Date() on the string in the JSON is converted in UTC :(
         day = new Date(element[0].substr(0, 10)).getDay();
 
         hours[hour].totalTime += element[1]; //sum of the total time for a given hour
@@ -326,7 +326,7 @@ function initializeArray(length) {
 
 //calculate the average efficency for the given period (day or hour)
 function calcAvg(array) {
-    array.forEach(function(element) {
+    array.forEach(function (element) {
         element.avgEfficency = element.totalEfficency / element.count;
     });
     return array;
@@ -335,11 +335,11 @@ function calcAvg(array) {
 //create the chart with total time and average efficency
 function displayCombined(DOMChart, data) {
     var totalTime = [];
-    data.forEach(function(item) {
+    data.forEach(function (item) {
         totalTime.push(item.totalTime / 3600);
     });
     var avgEfficency = [];
-    data.forEach(function(item) {
+    data.forEach(function (item) {
         avgEfficency.push(item.avgEfficency || 0);
     });
     var categories = [];
@@ -447,7 +447,7 @@ function activityChart(data) {
     var totalSeconds = 0;
 
     //colors the bars
-    data.forEach(function(activity) {
+    data.forEach(function (activity) {
         totalSeconds += activity[1];
         switch (activity[5]) {
             case -2:
@@ -493,6 +493,14 @@ function activityChart(data) {
         }
     });
 
+
+    var activityNameLabel = activityData.map(function (item) {
+
+        return item.name;
+    }).slice(0, parseInt(document.getElementById("activitiesNumberSpinner").value), 10)
+
+
+
     $('#act_chart').highcharts({
         chart: {
             height: (document.getElementById("activitiesNumberSpinner").value * 20)
@@ -501,12 +509,12 @@ function activityChart(data) {
             text: 'Activities'
         },
         subtitle: {
-            text: '<strong>Total time recorded (hh:mm:ss) : ' + timeFormatter(totalSeconds) + '<br>' +avgPerDay(totalSeconds)+'</strong>'
+            text: '<strong>Total time recorded (hh:mm:ss) : ' + timeFormatter(totalSeconds) + '<br>' + avgPerDay(totalSeconds) + '</strong>'
         },
         tooltip: {
-            formatter: function() {
+            formatter: function () {
                 return 'Total: ' +
-                    timeFormatter(this.y) + '<br>'+avgPerDay(this.y) ;
+                    timeFormatter(this.y) + '<br>' + avgPerDay(this.y);
             }
         },
         plotOptions: {
@@ -514,7 +522,7 @@ function activityChart(data) {
                 dataLabels: {
                     allowPointSelect: true,
                     enabled: true,
-                    formatter: function() {
+                    formatter: function () {
                         return timeFormatter(this.y);
                     }
 
@@ -522,16 +530,11 @@ function activityChart(data) {
             }
         },
         xAxis: {
-            categories: function() {
-                var result = [];
-                return activityData.map(function(item) {
-                    return item.name;
-                }).slice(0, parseInt(document.getElementById("activitiesNumberSpinner").value),10);
-            }
+            categories: activityNameLabel
         },
         yAxis: {
             labels: {
-                formatter: function() {
+                formatter: function () {
                     return timeFormatter(this.value);
                 }
             }
@@ -539,7 +542,7 @@ function activityChart(data) {
         series: [{
             type: 'bar',
             name: 'Activities',
-            data: activityData.slice(0, parseInt(document.getElementById("activitiesNumberSpinner").value),10),
+            data: activityData.slice(0, parseInt(document.getElementById("activitiesNumberSpinner").value), 10),
             showInLegend: false
         }, {
             type: 'pie',
@@ -573,16 +576,16 @@ function activityChart(data) {
     });
 }
 
-function avgPerDay(time){
-  if(!usingFiles){
-    var fromDate = new Date(document.getElementById('from').value);
-    var toDate = new Date(document.getElementById('to').value);
-    var timeDiff = Math.abs(toDate.getTime() - fromDate.getTime());
-    var diffDays = Math.ceil(timeDiff / (1000 * 3600 * 24));
-    var avgPerDay = time / diffDays;
-    return 'Average time per day: ' + timeFormatter(Math.ceil(avgPerDay));
-  }
-  return '';
+function avgPerDay(time) {
+    if (!usingFiles) {
+        var fromDate = new Date(document.getElementById('from').value);
+        var toDate = new Date(document.getElementById('to').value);
+        var timeDiff = Math.abs(toDate.getTime() - fromDate.getTime());
+        var diffDays = Math.ceil(timeDiff / (1000 * 3600 * 24));
+        var avgPerDay = time / diffDays;
+        return 'Average time per day: ' + timeFormatter(Math.ceil(avgPerDay));
+    }
+    return '';
 }
 
 //seconds to a readable format
