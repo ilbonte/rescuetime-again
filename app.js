@@ -2,7 +2,7 @@
 
 var usingFiles = false; //True if the user uploaded his own JSON
 var failCount = 0; //Counts how many times getData tries the request if there is a failure
-var rawEfficencyData; //contains the efficiency's data (first 3 chart)
+var rawEfficiencyData; //contains the efficiency's data (first 3 chart)
 var rawActivityData; //contains the activities's data  (last chart)
 
 //objects that will be used for the requests with default values
@@ -34,13 +34,13 @@ var ls = {
 
 $("document").ready(function () {
     //handling upload event
-    $('#fileEfficency').on('change', fileUploaded);
+    $('#fileEfficiency').on('change', fileUploaded);
     $('#fileActivity').on('change', fileUploaded);
 
 
     //redraw the efficiency chart when the value change
     $('#trendLineSpinner').on('change', function (event) {
-        fullEfficiencyChart(rawEfficencyData);
+        fullEfficiencyChart(rawEfficiencyData);
     });
 
     $('#activitiesNumberSpinner').on('change', function (event) {
@@ -119,9 +119,9 @@ function getData(params) {
                 alert(data.messages);
             }
             if (params.restrict_kind === 'efficiency') {
-                fullEfficiencyChart(data.rows); //draw the efficency chart for the period
-                combinedCharts(data.rows); //draw the chats with efficency and totaltime combined
-                rawEfficencyData = data.rows;
+                fullEfficiencyChart(data.rows); //draw the efficiency chart for the period
+                combinedCharts(data.rows); //draw the chats with efficiency and totaltime combined
+                rawEfficiencyData = data.rows;
             } else if (params.restrict_kind === 'activity') {
                 activityChart(data.rows); //draw the chart with the list of the top activities
                 rawActivityData = data.rows;
@@ -152,9 +152,9 @@ function checkFiles() {
     usingFiles = true;
     $("#act-display").empty();
     // TODO: add check per vedere se ho effetivamente caricato dei file e vedere se sono validi
-    if (rawEfficencyData) {
-        fullEfficiencyChart(rawEfficencyData);
-        combinedCharts(rawEfficencyData);
+    if (rawEfficiencyData) {
+        fullEfficiencyChart(rawEfficiencyData);
+        combinedCharts(rawEfficiencyData);
     }
     if (rawActivityData) {
         activityChart(rawActivityData);
@@ -166,8 +166,8 @@ function fileUploaded(event) {
     var file = event.target.files[0];
     var reader = new FileReader();
     reader.onload = function (e) {
-        if (event.target.id === 'fileEfficency') {
-            rawEfficencyData = (JSON.parse(e.target.result)).rows;
+        if (event.target.id === 'fileEfficiency') {
+            rawEfficiencyData = (JSON.parse(e.target.result)).rows;
         } else if (event.target.id === 'fileActivity') {
             rawActivityData = (JSON.parse(e.target.result)).rows;
         }
@@ -298,11 +298,11 @@ function combinedCharts(data) {
         day = new Date(element[0].substr(0, 10)).getDay();
 
         hours[hour].totalTime += element[1]; //sum of the total time for a given hour
-        hours[hour].totalEfficency += (element[4] * element[1]) / 3600; //normalize the data
-        hours[hour].count++; //how many entries for a given hour. Used to calculate the average efficency
+        hours[hour].totalEfficiency += (element[4] * element[1]) / 3600; //normalize the data
+        hours[hour].count++; //how many entries for a given hour. Used to calculate the average efficiency
 
         days[day].totalTime += element[1];
-        days[day].totalEfficency += (element[4] * element[1]) / 3600;
+        days[day].totalEfficiency += (element[4] * element[1]) / 3600;
         days[day].count++;
     });
 
@@ -316,34 +316,34 @@ function initializeArray(length) {
     for (var i = 0; i < length; i++) {
         array.push({
             totalTime: 0,
-            totalEfficency: 0,
-            avgEfficency: 0,
+            totalEfficiency: 0,
+            avgEfficiency: 0,
             count: 0
         });
     }
     return array;
 }
 
-//calculate the average efficency for the given period (day or hour)
+//calculate the average efficiency for the given period (day or hour)
 function calcAvg(array) {
     array.forEach(function (element) {
-        element.avgEfficency = element.totalEfficency / element.count;
+        element.avgEfficiency = element.totalEfficiency / element.count;
     });
     return array;
 }
 
-//create the chart with total time and average efficency
+//create the chart with total time and average efficiency
 function displayCombined(DOMChart, data) {
     var totalTime = [];
     data.forEach(function (item) {
         totalTime.push(item.totalTime / 3600);
     });
-    var avgEfficency = [];
+    var avgEfficiency = [];
     data.forEach(function (item) {
-        avgEfficency.push(item.avgEfficency || 0);
+        avgEfficiency.push(item.avgEfficiency || 0);
     });
     var categories = [];
-    if (avgEfficency.length === 7) {
+    if (avgEfficiency.length === 7) {
         categories = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
     }
 
@@ -410,7 +410,7 @@ function displayCombined(DOMChart, data) {
         }, {
             name: 'Efficiency',
             type: 'spline',
-            data: avgEfficency,
+            data: avgEfficiency,
             tooltip: {
                 pointFormat: 'Efficiency: {point.y:.2f} %'
             }
