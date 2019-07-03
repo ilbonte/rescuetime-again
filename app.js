@@ -284,6 +284,12 @@ function fullEfficiencyChart(data) {
         }
     });
     Highcharts.setOptions(Highcharts.theme);
+    Highcharts.setOptions({
+        global : {
+            useUTC : false
+        }
+    });
+
 
 }
 
