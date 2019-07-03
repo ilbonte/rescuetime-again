@@ -1,3 +1,4 @@
+@import url('https://use.fontawesome.com/releases/v5.8.1/css/all.css');
 
 .row-centered {
     text-align: center;
@@ -20,6 +21,15 @@
     margin: 100px auto;
     -webkit-animation: rotateplane 1.2s infinite ease-in-out;
     animation: rotateplane 1.2s infinite ease-in-out;
+}
+
+#reportrange {
+    background: #fff; 
+    cursor: pointer; 
+    padding: 5px 10px; 
+    border: 1px solid #ccc; 
+    text-align: center;
+    width: 350px;
 }
 
 .chart{

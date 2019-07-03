@@ -82,8 +82,8 @@ function init() {
         usingFiles = false;
 
         queries.efficiency.key = queries.activities.key = key;
-        queries.efficiency.restrict_begin = queries.activities.restrict_begin = document.getElementById('from').value;
-        queries.efficiency.restrict_end = queries.activities.restrict_end = document.getElementById('to').value;
+        queries.efficiency.restrict_begin = queries.activities.restrict_begin = $('#reportrange').data('daterangepicker').startDate._d;
+        queries.efficiency.restrict_end = queries.activities.restrict_end = $('#reportrange').data('daterangepicker').endDate._d;
         queries.efficiency.interval = queries.activities.interval = 'hour';
         queries.efficiency.format = queries.activities.format = 'json';
 
@@ -584,8 +584,8 @@ function activityChart(data) {
 
 function avgPerDay(time) {
     if (!usingFiles) {
-        var fromDate = new Date(document.getElementById('from').value);
-        var toDate = new Date(document.getElementById('to').value);
+        var fromDate = $('#reportrange').data('daterangepicker').startDate._d;
+        var toDate = $('#reportrange').data('daterangepicker').endDate._d;
         var timeDiff = Math.abs(toDate.getTime() - fromDate.getTime());
         var diffDays = Math.ceil(timeDiff / (1000 * 3600 * 24));
         var avgPerDay = time / diffDays;
