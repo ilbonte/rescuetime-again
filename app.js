@@ -430,23 +430,23 @@ function activityChart(data) {
     var categories = {
         veryDistracting: {
             total: 0,
-            color: '#C5392F'
+            color: '#D61800'
         },
         distracting: {
             total: 0,
-            color: '#92343B'
+            color: '#DC685A'
         },
         neutral: {
             total: 0,
-            color: '#655568'
+            color: '#B1C1BF'
         },
         productive: {
             total: 0,
-            color: '#395B96'
+            color: '#3D80E0'
         },
         veryProductive: {
             total: 0,
-            color: '#2F78BD'
+            color: '#0055C4'
         }
     };
     var activityData = [];

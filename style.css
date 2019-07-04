@@ -56,6 +56,10 @@ div > div.input-group {
     display: inline-flex;
 }
 
+.highcharts-point {
+    stroke-width: 0px;
+}
+
 @-webkit-keyframes rotateplane {
     0% {
         -webkit-transform: perspective(120px)
