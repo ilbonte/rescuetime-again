@@ -182,7 +182,7 @@ function startDownload(data, type) {
     var file = "text/json;charset=utf-8," + encodeURIComponent(JSONString);
     $('<a>', {
         href: "data:" + file,
-        download: type + "_" + document.getElementById('from').value + "_to_" + document.getElementById('to').value + ".json",
+        download: type + "_" + $('#reportrange').data('daterangepicker').startDate._d.toISOString().slice(0, 10) + "_to_" + $('#reportrange').data('daterangepicker').endDate._d.toISOString().slice(0, 10) + ".json",
         id: "download" + type,
         text: "Download " + type + " data"
     }).appendTo('#downloadSection');
@@ -285,11 +285,10 @@ function fullEfficiencyChart(data) {
     });
     Highcharts.setOptions(Highcharts.theme);
     Highcharts.setOptions({
-        global : {
-            useUTC : false
+        global: {
+            useUTC: false
         }
     });
-
 
 }
 
