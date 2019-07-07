@@ -35,11 +35,9 @@
             </div>
         </div>
 
-
         <div class="row">
             <div class="spinner" hidden></div>
         </div>
-
 
         <div class="row row-centered page-nav-bar">
             <main>
@@ -99,11 +97,17 @@
                                     });
                                 </script>
                             </div>
+                            <div id="downloadSection">
+
+                            </div>
                         </div>
-                        <div class="col-sm-4">
+                        <div class="col-sm-6">
                             <br>NOTE: It may take a few seconds to retrieve and elaborate the data
                             <br>
+                            <br>
                             <button type="button" class="btn btn-primary" onClick="init()">Start analysis</button>
+                            <br>
+                            <br>
                             <div class="checkbox">
                                 <label>
                                     <input type="checkbox" id="download"> Download JSON file for the selected range. <a
@@ -113,61 +117,56 @@
                                 </label>
                             </div>
                         </div>
-                        <div class="col-sm-2" id="downloadSection">
-
-                        </div>
                     </div>
                 </section>
 
                 <section id="content2">
                     <div class="row">
-                        <div class="col-sm-12">
-
-
-                        </div>
-
-                        <div class="col-sm-3">
-                            <h3>Efficiency</h3>
+                        <div class="col-sm-6">
+                            <strong>Efficiency</strong>
+                            <br>
                             <input id="fileEfficiency" type="file" />
-
-                        </div>
-
-                        <div class="col-sm-3">
-                            <h3>Activity</h3>
+                            <br>
+                            <br>
+                            <strong>Activity</strong>
+                            <br>
                             <input id="fileActivity" type="file" />
-
-                        </div>
-                        <div class="col-sm-4">
+                            <br>
                             <br>
                             <button type="button" class="btn btn-info" onClick="checkFiles()">Analyze uploaded
                                 data</button>
                         </div>
-
                     </div>
                 </section>
 
                 <section id="content3">
-                    <h5>Which type of file do you want to merge?</h5>
-                    <input type="radio" name="type" value="hour" id="efficiency" checked>Productivity/Efficiency
-                    <br>
-                    <input type="radio" name="type" value="activity" id="activity">Activity
-
-
-                    <p><strong>Upload Files:</strong>
-                        <input type="file" name="filesToUpload" id="filesToUpload" multiple=""
-                            onChange="makeFileList();" />
-                    </p>
-                    <button onClick="merge()">MERGE!</button>
-                    <button onClick="removeOldFiles()">ResetAll</button>
-                    <div id="downloadMergedSection">
-
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <h5>Which type of file do you want to merge?</h5>
+                            <input type="radio" name="type" value="hour" id="efficiency" checked>Productivity/Efficiency
+                            <br>
+                            <input type="radio" name="type" value="activity" id="activity">Activity
+                            <br>
+                            <br>
+                            <p><strong>Upload Files:</strong>
+                                <input type="file" name="filesToUpload" id="filesToUpload" multiple=""
+                                    onChange="makeFileList();" />
+                            </p>
+                            <button onClick="merge()">MERGE!</button>
+                            <button onClick="removeOldFiles()">ResetAll</button>
+                        </div>
+                        <div class="col-sm-3">
+                            <div id="downloadMergedSection">
+                            </div>
+                            <p>
+                                <strong>Files You Selected:</strong>
+                            </p>
+                            <ul id="fileList">
+                                <li>No Files Selected</li>
+                            </ul>
+                        </div>
                     </div>
-                    <p>
-                        <strong>Files You Selected:</strong>
-                    </p>
-                    <ul id="fileList">
-                        <li>No Files Selected</li>
-                    </ul>
+
                     <script src="https://cdn.jsdelivr.net/lodash/4.11.2/lodash.core.min.js"
                         integrity="sha256-wMmYI13CCKWf57eu6cwv4vXS+vvjk3A4RMx95QIaVCc="
                         crossorigin="anonymous"></script>
@@ -294,9 +293,6 @@
             </main>
         </div>
 
-
-
-
         <div class="row chart">
             <div class="col-sm-12">
                 <blockquote class="col-sm-offset-1 col-sm-10">
@@ -339,7 +335,6 @@
             </div>
         </div>
 
-
         <div class="row chart">
             <div class="col-sm-12">
                 <br>
@@ -350,7 +345,6 @@
                 <div id="avg_day_chart"></div>
             </div>
         </div>
-
 
         <div class="row chart">
             <div class="col-sm-12">
@@ -380,7 +374,6 @@
                 <div id="act_chart"></div>
             </div>
         </div>
-
 
         <script src="app.js"></script>
 

@@ -72,12 +72,25 @@ main > input:checked + label {
 #tab3:checked ~ #content3 {
   display: block;
   text-align: left;
+  height: 235px;
 }
 
-@media screen and (max-width: 500px) {
+#fileList {
+  height:150px; 
+  width:350px;
+  overflow:hidden; 
+  overflow-y:scroll;
+}
+
+@media screen and (max-width: 575px) {
   label {
     padding: 15px;
   }
+  #tab1:checked ~ #content1,
+  #tab2:checked ~ #content2,
+  #tab3:checked ~ #content3 {
+  height: 100%;
+}
 }
 
 .row-centered {
