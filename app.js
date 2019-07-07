@@ -587,6 +587,9 @@ function avgPerDay(time) {
         var toDate = $('#reportrange').data('daterangepicker').endDate._d;
         var timeDiff = Math.abs(toDate.getTime() - fromDate.getTime());
         var diffDays = Math.ceil(timeDiff / (1000 * 3600 * 24));
+        if (diffDays > 90) {
+            diffDays = 90;
+        }
         var avgPerDay = time / diffDays;
         return 'Average time per day: ' + timeFormatter(Math.ceil(avgPerDay));
     }
