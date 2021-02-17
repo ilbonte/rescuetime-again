@@ -82,8 +82,8 @@ function init() {
         usingFiles = false;
 
         queries.efficiency.key = queries.activities.key = key;
-        queries.efficiency.restrict_begin = queries.activities.restrict_begin = document.getElementById('from').value;
-        queries.efficiency.restrict_end = queries.activities.restrict_end = document.getElementById('to').value;
+        queries.efficiency.restrict_begin = queries.activities.restrict_begin = $('#reportrange').data('daterangepicker').startDate._d;
+        queries.efficiency.restrict_end = queries.activities.restrict_end = $('#reportrange').data('daterangepicker').endDate._d;
         queries.efficiency.interval = queries.activities.interval = 'hour';
         queries.efficiency.format = queries.activities.format = 'json';
 
@@ -105,7 +105,7 @@ function init() {
 //get the data using rescuetime api
 function getData(params) {
     var rescuetimeAPI = 'https://www.rescuetime.com/anapi/data?';
-    $.getJSON('https://allow-any-origin.appspot.com/' + rescuetimeAPI, {
+    $.getJSON('https://cors-anywhere.herokuapp.com/' + rescuetimeAPI, {
         key: params.key,
         perspective: params.perspective,
         restrict_kind: params.restrict_kind,
@@ -182,7 +182,7 @@ function startDownload(data, type) {
     var file = "text/json;charset=utf-8," + encodeURIComponent(JSONString);
     $('<a>', {
         href: "data:" + file,
-        download: type + "_" + document.getElementById('from').value + "_to_" + document.getElementById('to').value + ".json",
+        download: type + "_" + $('#reportrange').data('daterangepicker').startDate._d.toISOString().slice(0, 10) + "_to_" + $('#reportrange').data('daterangepicker').endDate._d.toISOString().slice(0, 10) + ".json",
         id: "download" + type,
         text: "Download " + type + " data"
     }).appendTo('#downloadSection');
@@ -284,6 +284,11 @@ function fullEfficiencyChart(data) {
         }
     });
     Highcharts.setOptions(Highcharts.theme);
+    Highcharts.setOptions({
+        global: {
+            useUTC: false
+        }
+    });
 
 }
 
@@ -424,23 +429,23 @@ function activityChart(data) {
     var categories = {
         veryDistracting: {
             total: 0,
-            color: '#C5392F'
+            color: '#D61800'
         },
         distracting: {
             total: 0,
-            color: '#92343B'
+            color: '#DC685A'
         },
         neutral: {
             total: 0,
-            color: '#655568'
+            color: '#B1C1BF'
         },
         productive: {
             total: 0,
-            color: '#395B96'
+            color: '#3D80E0'
         },
         veryProductive: {
             total: 0,
-            color: '#2F78BD'
+            color: '#0055C4'
         }
     };
     var activityData = [];
@@ -578,10 +583,13 @@ function activityChart(data) {
 
 function avgPerDay(time) {
     if (!usingFiles) {
-        var fromDate = new Date(document.getElementById('from').value);
-        var toDate = new Date(document.getElementById('to').value);
+        var fromDate = $('#reportrange').data('daterangepicker').startDate._d;
+        var toDate = $('#reportrange').data('daterangepicker').endDate._d;
         var timeDiff = Math.abs(toDate.getTime() - fromDate.getTime());
         var diffDays = Math.ceil(timeDiff / (1000 * 3600 * 24));
+        if (diffDays > 90) {
+            diffDays = 90;
+        }
         var avgPerDay = time / diffDays;
         return 'Average time per day: ' + timeFormatter(Math.ceil(avgPerDay));
     }
