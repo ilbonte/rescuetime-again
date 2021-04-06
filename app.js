@@ -105,7 +105,7 @@ function init() {
 //get the data using rescuetime api
 function getData(params) {
     var rescuetimeAPI = 'https://www.rescuetime.com/anapi/data?';
-    $.getJSON('https://cors-anywhere.herokuapp.com/' + rescuetimeAPI, {
+    $.getJSON('https://cors.bridged.cc/' + rescuetimeAPI, {
         key: params.key,
         perspective: params.perspective,
         restrict_kind: params.restrict_kind,
